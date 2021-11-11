@@ -14,7 +14,7 @@
 		}
 	</script>
 	<script>
-		delete Document.prototype.adoptedStyleSheets;
+		// delete Document.prototype.adoptedStyleSheets;
 	</script>
 
 	<script src="../../webcomponentsjs/webcomponents-loader.js"></script>
@@ -47,18 +47,11 @@
 	</script>
 </head>
 
-<body style="background-color: var(--sapBackgroundColor);">
+<body class="panel1auto">
 
-<style>
+<link rel="stylesheet" type="text/css" href="styles/Panel.css">
 
-	.header {
-		display: flex;
-		align-items: center;
-		width: 100%;
-	}
-</style>
-
-	<ui5-panel id="p1" collapsed accessible-role="Complementary">
+	<ui5-panel id="p1" collapsed accessible-role="Complementary" no-animation>
 
 		<!-- Panel header -->
 		<div slot="header" class="header">

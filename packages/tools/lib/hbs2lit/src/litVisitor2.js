@@ -8,6 +8,9 @@ let skipIfDefined = false;
 // when true => an HTML node value, when false => an attribute value
 let isNodeValue = false;
 
+// when true => the current attribute is "style"
+let isStyleAttribute = false;
+
 // matches event handlers @click= and boolean attrs ?disabled=
 const dynamicAttributeRgx = /\s(\?|@)([a-zA-Z|-]+)="?\s*$/;
 
@@ -32,7 +35,7 @@ function HTMLLitVisitor(debug) {
 	this.result = "";
 	this.mainBlock = "";
 	this.blockPath = "context";
-	this.blockParameters = ["context"];
+	this.blockParameters = ["context", "tags", "suffix"];
 	this.paths = []; //contains all normalized relative paths
 	this.debug = debug;
 	if (this.debug) {
@@ -48,7 +51,7 @@ HTMLLitVisitor.prototype.Program = function(program) {
 	this.keys.push(key);
 	this.debug && this.blockByNumber.push(key);
 
-	this.blocks[this.currentKey()] = "const " + this.currentKey() + " = (" + this.blockParameters.join(", ") + ") => { return ";
+	this.blocks[this.currentKey()] = "const " + this.currentKey() + " = (" + this.blockParameters.join(", ") + ") => ";
 
 	if (this.keys.length > 1) { //it's a nested block
 		this.blocks[this.prevKey()] += this.currentKey() + "(" + this.blockParameters.join(", ") + ")";
@@ -59,7 +62,7 @@ HTMLLitVisitor.prototype.Program = function(program) {
 
 	this.blocks[this.currentKey()] += "html`";
 	Visitor.prototype.Program.call(this, program);
-	this.blocks[this.currentKey()] += "`; };";
+	this.blocks[this.currentKey()] += "`;";
 
 	this.keys.pop(key);
 };
@@ -77,6 +80,12 @@ HTMLLitVisitor.prototype.ContentStatement = function(content) {
 		isNodeValue = closingIndex > openingIndex;
 	}
 
+	isStyleAttribute = !isNodeValue && contentStatement.match(/style *= *["']? *$/);
+
+	if (!isStyleAttribute && contentStatement.match(/style=/)) {
+		console.log("WARNING: style hard-coded", contentStatement);
+	}
+
 	// Scope custom element tags
 	contentStatement = contentStatement.replaceAll(/(<\/?\s*)([a-zA-Z0-9_]+-[a-zA-Z0-9_-]+)/g, "$1\${scopeTag(\"$2\", tags, suffix)}");
 
@@ -91,7 +100,6 @@ HTMLLitVisitor.prototype.MustacheStatement = function(mustache) {
 	} else {
 		const path = normalizePath.call(this, mustache.path.original);
 		const hasCalculatingClasses = path.includes("context.classes");
-		const hasStylesCalculation = path.includes("context.styles");
 
 		let parsedCode = "";
 
@@ -99,7 +107,7 @@ HTMLLitVisitor.prototype.MustacheStatement = function(mustache) {
 			parsedCode = `\${unsafeHTML(${path})}`;
 		} else if (hasCalculatingClasses) {
 			parsedCode = `\${classMap(${path})}`;
-		} else if (hasStylesCalculation) {
+		} else if (isStyleAttribute) {
 			parsedCode = `\${styleMap(${path})}`;
 		} else if (skipIfDefined){
 			parsedCode = `\${${path}}`;
