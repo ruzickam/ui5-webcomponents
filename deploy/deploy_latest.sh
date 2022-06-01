@@ -52,11 +52,11 @@ find . -maxdepth 1 ! -name master ! -name .git -exec rm -rv "{}" \; || exit 0
 cd ..
 
 # Run the build again so rollup can generate the correct public path urls
-cd $TRAVIS_BUILD_DIR
+cd "/home/runner/work/ui5-webcomponents/ui5-webcomponents"
 yarn build:playground
 
 # Move master build folder to gh-pages folder
-cp -Rf $TRAVIS_BUILD_DIR/packages/playground/dist/* gh-pages
+cp -Rf /home/runner/work/ui5-webcomponents/ui5-webcomponents/packages/playground/dist/* gh-pages
 
 # put the commit id as version
 echo "$(git log -1 HEAD)" > gh-pages/version.txt
