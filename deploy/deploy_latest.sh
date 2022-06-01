@@ -72,7 +72,7 @@ ls -a gh-pages
 # Configure Git
 cd gh-pages
 git config user.name "$GIT_COMMIT_AUTHOR_NAME"
-git config user.email "$GIT_COMMIT_AUTHOR_NAME"
+git config user.email "$GIT_COMMIT_AUTHOR_EMAIL"
 
 # Prepare commit
 git add -N . # consider untracked files for git diff
