@@ -28,7 +28,7 @@
     "clean:assets": "rimraf ./assets/js/ui5-webcomponents/*",
     "clean:pages": "rimraf ./docs/pages/content/main && rimraf ./docs/pages/content/fiori",
     "start": "npm-run-all --parallel prepare:** && bundle exec jekyll serve",
-    "install:dependencies": "gem install bundler -v 2.0.2 && bundle install",
+    "install:dependencies": "sudo gem install bundler -v 2.0.2 && bundle install",
     "copy:assets": "npm-run-all copy:assets:resources copy:assets:main copy:assets:fiori",
     "copy:assets:resources": "copy-and-watch \"../fiori/dist/resources/*\" \"./assets/js/ui5-webcomponents\"",
     "copy:assets:main": "npm-run-all copy:assets:main:img copy:assets:main:styles copy:assets:main:kitchen",
