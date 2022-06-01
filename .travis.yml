@@ -14,9 +14,9 @@ before_install:
   - gem install jekyll -v 3.8.6
   - gem install jekyll-seo-tag
 
-script:
-- ENABLE_CLDR=1 yarn build
-- yarn test
+# script:
+# - ENABLE_CLDR=1 yarn build
+# - yarn test
 
 # deploy:
 #   provider: script
