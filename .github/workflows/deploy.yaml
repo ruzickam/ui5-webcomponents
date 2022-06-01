@@ -1,0 +1,30 @@
+name: Deploy Latest Playground
+
+on:
+  push:
+    branches:
+      - latest-release-website
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+        cache: 'yarn'
+    - name: Install Dependencies
+      run: yarn
+
+    - name: Build Project
+      run: ENABLE_CLDR=1 yarn build
+
+    - name: Build Playground
+      run: yarn build:playground
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      with:
+          branch: gh-pages
+          folder: .
