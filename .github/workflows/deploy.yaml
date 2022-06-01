@@ -21,4 +21,5 @@ jobs:
       run: yarn build
 
     - name: Deploy
+      uses: rlespinasse/git-commit-data-action@v1
       run: ./deploy/deploy_latest.sh
