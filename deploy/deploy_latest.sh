@@ -86,7 +86,7 @@ fi
 # Commit the "changes", i.e. the new version.
 # The delta will show diffs between new and old versions.
 git add .
-git commit -m "Automatic update by Github Actions CI #$TRAVIS_BUILD_NUMBER, commit ${SHA}"
+git commit -m "Automatic update by Github Actions CI, commit ${GIT_COMMIT_SHORT_SHA}"
 
 # Get the deploy key by using Travis's stored variables to decrypt deploy_key.enc
 # ENCRYPTED_KEY_VAR="encrypted_${ENCRYPTION_LABEL}_key"
@@ -99,4 +99,4 @@ git commit -m "Automatic update by Github Actions CI #$TRAVIS_BUILD_NUMBER, comm
 # ssh-add ../deploy_key
 
 # Push new change
-git push $SSH_REPO gh-pages
+git push git@github.com:SAP/ui5-webcomponents.git gh-pages
