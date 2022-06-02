@@ -226,7 +226,7 @@ const metadata = {
  *
  * <h3 class="comment-api-title">Overview</h3>
  *
- * An image-like control that has different display options for representing images and icons
+ * An image-like component that has different display options for representing images and icons
  * in different shapes and sizes, depending on the use case.
  *
  * The shape can be circular or square. There are several predefined sizes, as well as an option to
