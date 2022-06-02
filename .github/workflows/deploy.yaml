@@ -2,7 +2,7 @@ name: Master Playground
 
 on:
   push:
-    branches: [ latest-release-website ]
+    branches: [ master ]
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -17,6 +17,7 @@ jobs:
     - name: Install and Build
       run: |
         yarn install
+        yarn build
         yarn build:playground:master_as_admin
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4.3.3
