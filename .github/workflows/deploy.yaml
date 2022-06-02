@@ -2,7 +2,7 @@ name: Deploy Main Playground
 
 on:
   push:
-    branches: [ main ]
+    branches: [ latest-release-website ]
 jobs:
   deploy:
     runs-on: ubuntu-latest
