@@ -22,7 +22,7 @@ jobs:
     - name: Generate version.md
       uses: DamianReeves/write-file-action@master
       with:
-        path: packages/playground/version.md
+        path: packages/playground/dist/version.md
         contents: echo github.event.head_commit.message
         write-mode: overwrite
 
