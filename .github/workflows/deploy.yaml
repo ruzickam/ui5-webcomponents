@@ -19,11 +19,11 @@ jobs:
         yarn install
         yarn build:playground:main_as_admin
 
-    - name: Generate version.md
+    - name: Write version.md
       uses: DamianReeves/write-file-action@master
       with:
-        path: packages/playground/dist/main/version.md
-        contents: "### Latest commit:${{ github.event.head_commit.author }}, ${{ github.event.head_commit.message }}"
+        path: packages/playground/dist/version.md
+        contents: ${{ github.event.head_commit.author.email }} ${{ ':' }} ${{ github.event.head_commit.message }} ${{ github.event.head_commit.url }}
         write-mode: overwrite
 
     - name: Deploy
