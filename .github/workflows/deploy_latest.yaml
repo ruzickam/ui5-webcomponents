@@ -19,7 +19,8 @@ jobs:
         yarn install
         yarn build:playground_as_admin
 
-    - uses: DamianReeves/write-file-action
+    - name: Generate version info
+      uses: DamianReeves/write-file-action@v1
       with:
         path: packages/playground/version.txt
         contents: echo github.event.head_commit.message
