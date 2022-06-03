@@ -19,9 +19,11 @@ jobs:
         yarn install
         yarn build:playground_as_admin
 
-    - name: Create Version Info
-      run: |
-        echo github.event.head_commit.message >> version.txt
+    - uses: DamianReeves/write-file-action
+      with:
+        path: packages/playground/version.txt
+        contents: echo github.event.head_commit.message
+        write-mode: append
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4.3.3
