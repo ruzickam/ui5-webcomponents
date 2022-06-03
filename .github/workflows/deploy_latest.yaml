@@ -19,7 +19,7 @@ jobs:
         yarn install
         yarn build:playground_as_admin
 
-    - name: Write version.md
+    - name: Generate version.md
       uses: DamianReeves/write-file-action@master
       with:
         path: packages/playground/version.md
