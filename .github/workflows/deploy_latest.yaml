@@ -20,11 +20,11 @@ jobs:
         yarn build:playground_as_admin
 
     - name: Write version.md
-      uses: DamianReeves/write-file-action
+      uses: DamianReeves/write-file-action@master
       with:
         path: packages/playground/version.md
         contents: echo github.event.head_commit.message
-        write-mode: append
+        write-mode: overwrite
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4.3.3
