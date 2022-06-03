@@ -18,6 +18,14 @@ jobs:
       run: |
         yarn install
         yarn build:playground_as_admin
+
+    - name: Create Version Info
+      uses: DamianReeves/write-file-action
+      with:
+        path: ./version.txt
+        contents: ${github.event.head_commit.message}
+        write-mode: overwrite
+
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4.3.3
       with:
