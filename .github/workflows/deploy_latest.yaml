@@ -23,7 +23,7 @@ jobs:
       uses: DamianReeves/write-file-action@master
       with:
         path: packages/playground/dist/version.md
-        contents: Built on ${{ github.event.head_commit.author }}, ${{ github.event.head_commit.message }}
+        contents: ${{ github.event.head_commit.author }} ${{ github.event.head_commit.message }}
         write-mode: overwrite
 
     - name: Deploy
