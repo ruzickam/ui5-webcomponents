@@ -20,11 +20,8 @@ jobs:
         yarn build:playground:main_as_admin
 
     - name: Create Version Info
-      uses: DamianReeves/write-file-action
-      with:
-        path: ./main/version.txt
-        contents: ${github.event.head_commit.message}
-        write-mode: overwrite
+      run: |
+        echo github.event.head_commit.message >> version.txt
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4.3.3
