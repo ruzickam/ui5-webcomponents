@@ -19,10 +19,10 @@ jobs:
         yarn install
         yarn build:playground_as_admin
 
-    - name: Generate version info
-      uses: DamianReeves/write-file-action@v1
+    - name: Write version.md
+      uses: DamianReeves/write-file-action
       with:
-        path: packages/playground/version.txt
+        path: packages/playground/version.md
         contents: echo github.event.head_commit.message
         write-mode: append
 
