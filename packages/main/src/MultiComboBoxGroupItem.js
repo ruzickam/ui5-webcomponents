@@ -18,15 +18,15 @@ const metadata = {
 			type: String,
 		},
 	},
-	slots: /** @lends  sap.ui.webcomponents.main.MultiComboBoxGroupItem.prototype */ {
+	slots: /** @lends sap.ui.webcomponents.main.MultiComboBoxGroupItem.prototype */ {
 	},
-	events: /** @lends  sap.ui.webcomponents.main.MultiComboBoxGroupItem.prototype */ {
+	events: /** @lends sap.ui.webcomponents.main.MultiComboBoxGroupItem.prototype */ {
 	},
 };
 
 /**
  * @class
- * The <code>ui5-multi-combobox-group-item</code> is type of suggestion item,
+ * The <code>ui5-mcb-group-item</code> is type of suggestion item,
  * that can be used to split the <code>ui5-multi-combobox</code> suggestions into groups.
  *
  * @constructor

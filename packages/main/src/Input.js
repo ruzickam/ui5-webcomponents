@@ -2,7 +2,6 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import {
-	isIE,
 	isPhone,
 	isSafari,
 	isAndroid,
@@ -151,7 +150,7 @@ const metadata = {
 			type: HTMLElement,
 		},
 	},
-	properties: /** @lends  sap.ui.webcomponents.main.Input.prototype */  {
+	properties: /** @lends sap.ui.webcomponents.main.Input.prototype */  {
 
 		/**
 		 * Defines whether the component is in disabled state.
@@ -440,7 +439,7 @@ const metadata = {
 			noAttribute: true,
 		},
 	},
-	events: /** @lends  sap.ui.webcomponents.main.Input.prototype */ {
+	events: /** @lends sap.ui.webcomponents.main.Input.prototype */ {
 		/**
 		 * Fired when the input operation has finished by pressing Enter or on focusout.
 		 *
@@ -768,11 +767,6 @@ class Input extends UI5Element {
 	}
 
 	_onkeyup(event) {
-		// The native Delete event does not update the value property "on time". So, the (native) change event is always fired with the old value
-		if (isDelete(event)) {
-			this.value = event.target.value;
-		}
-
 		this._keyDown = false;
 		this._backspaceKeyDown = false;
 	}
@@ -914,7 +908,10 @@ class Input extends UI5Element {
 		const focusedOutToSuggestions = this.Suggestions && event.relatedTarget && event.relatedTarget.shadowRoot && event.relatedTarget.shadowRoot.contains(this.Suggestions.responsivePopover);
 		const focusedOutToValueStateMessage = event.relatedTarget && event.relatedTarget.shadowRoot && event.relatedTarget.shadowRoot.querySelector(".ui5-valuestatemessage-root");
 
-		this._preventNextChange = this.effectiveShowClearIcon && this.shadowRoot.contains(event.relatedTarget);
+		if (this.showClearIcon && !this.effectiveShowClearIcon) {
+			this._clearIconClicked = false;
+			this._handleChange();
+		}
 
 		// if focusout is triggered by pressing on suggestion item or value state message popover, skip invalidation, because re-rendering
 		// will happen before "itemPress" event, which will make item "active" state not visualized
@@ -958,21 +955,14 @@ class Input extends UI5Element {
 		}
 	}
 
-	_handleNativeInputChange() {
-		// The native change sometimes fires too early and getting input's value in the listener would return
-		// the previous value instead of the most recent one. This would make things consistent.
-		clearTimeout(this._nativeChangeDebounce);
-		this._nativeChangeDebounce = setTimeout(() => this._handleChange(), 100);
-	}
-
 	_handleChange() {
-		if (this._preventNextChange) {
-			this._preventNextChange = false;
+		if (this._clearIconClicked) {
+			this._clearIconClicked = false;
 			return;
 		}
 
-		if (this._changeFiredValue !== this.value) {
-			this._changeFiredValue = this.value;
+		if (this._changeFiredValue !== this.getInputDOMRefSync().value) {
+			this._changeFiredValue = this.getInputDOMRefSync().value;
 			this.fireEvent(this.EVENT_CHANGE);
 		}
 	}
@@ -980,11 +970,13 @@ class Input extends UI5Element {
 	_clear() {
 		this.value = "";
 		this.fireEvent(this.EVENT_INPUT);
-		this._handleChange();
-
 		if (!this._isPhone) {
 			this.focus();
 		}
+	}
+
+	_iconMouseDown() {
+		this._clearIconClicked = true;
 	}
 
 	_scroll(event) {
@@ -1048,13 +1040,7 @@ class Input extends UI5Element {
 			event.stopImmediatePropagation();
 		}
 
-		/* skip calling change event when an input with a placeholder is focused on IE
-			- value of the host and the internal input should be differnt in case of actual input
-			- input is called when a key is pressed => keyup should not be called yet
-		*/
-		const skipFiring = (inputDomRef.value === this.value) && isIE() && !this._keyDown && !!this.placeholder;
-
-		!skipFiring && this.fireEventByAction(this.ACTION_USER_INPUT, event);
+		this.fireEventByAction(this.ACTION_USER_INPUT, event);
 
 		this.hasSuggestionItemSelected = false;
 		this._isValueStateFocused = false;
@@ -1194,7 +1180,7 @@ class Input extends UI5Element {
 
 		const itemText = item.text || item.textContent; // keep textContent for compatibility
 		const fireInput = keyboardUsed
-			? this.valueBeforeItemSelection !== itemText : this.value !== itemText;
+			? this.valueBeforeItemSelection !== itemText : this.valueBeforeAutoComplete !== itemText;
 
 		this.hasSuggestionItemSelected = true;
 
@@ -1202,6 +1188,7 @@ class Input extends UI5Element {
 			this.value = itemText;
 			this.valueBeforeItemSelection = itemText;
 			this.lastConfirmedValue = itemText;
+			this.getInputDOMRefSync().value = itemText;
 			this.fireEvent(this.EVENT_INPUT);
 			this._handleChange();
 		}
@@ -1280,13 +1267,6 @@ class Input extends UI5Element {
 			this.fireEvent(this.EVENT_INPUT, { inputType: event.inputType });
 			// Angular two way data binding
 			this.fireEvent("value-changed");
-			return;
-		}
-
-		// In IE, pressing the ENTER does not fire change
-		const valueChanged = (this.previousValue !== undefined) && (this.previousValue !== this.value);
-		if (isIE() && action === this.ACTION_ENTER && valueChanged) {
-			this._handleChange();
 		}
 	}
 
