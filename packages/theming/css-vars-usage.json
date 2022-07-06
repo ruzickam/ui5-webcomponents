@@ -266,6 +266,7 @@
   "--sapFontHeaderFamily",
   "--sapFontLargeSize",
   "--sapFontMediumSize",
+  "--sapFontSemiboldDuplexFamily",
   "--sapFontSize",
   "--sapFontSmallSize",
   "--sapGroup_ContentBackground",
@@ -414,6 +415,7 @@
   "--sapTile_TitleTextColor",
   "--sapTitleColor",
   "--sapToolbar_SeparatorColor",
+  "--sapUiFontSemiboldDuplexFamily",
   "--sapWarningBackground",
   "--sapWarningBorderColor"
 ]
