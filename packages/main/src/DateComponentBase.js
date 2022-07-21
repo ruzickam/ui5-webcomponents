@@ -143,6 +143,24 @@ class DateComponentBase extends UI5Element {
 		return this.getFormat().format(localDate, true);
 	}
 
+	getMinDateAsDateObject() {
+		return _minDate;
+	}
+
+	getMaxDateAsDateObject() {
+		return _maxDate;
+	}
+
+	setMinDateAsDateObject(date) {
+		// this.setMinDate(this.getFormat().format(date));
+		this.minDate = this.getFormat().format(date);
+	}
+
+	setMaxDateAsDateObject(date) {
+		// this.setMaxDate(this.getFormat().format(date));
+		this.maxDate = this.getFormat().format(date);
+	}
+
 	getFormat() {
 		return this._isPattern
 			? DateFormat.getInstance({
