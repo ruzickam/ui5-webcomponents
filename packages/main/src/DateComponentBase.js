@@ -144,11 +144,11 @@ class DateComponentBase extends UI5Element {
 	}
 
 	getMinDateAsDateObject() {
-		return _minDate;
+		return this._minDate;
 	}
 
 	getMaxDateAsDateObject() {
-		return _maxDate;
+		return this._maxDate;
 	}
 
 	setMinDateAsDateObject(date) {
