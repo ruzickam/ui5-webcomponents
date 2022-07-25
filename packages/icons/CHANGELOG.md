@@ -8,6 +8,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @ui5/webcomponents-icons-tnt
 
 
+# [1.6.0](https://github.com/SAP/ui5-webcomponents/compare/v1.5.0...v1.6.0) (2022-07-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-icons
+
+
+
+
+
 # [1.5.0](https://github.com/SAP/ui5-webcomponents/compare/v1.4.0...v1.5.0) (2022-07-03)
 
 **Note:** Version bump only for package @ui5/webcomponents-icons
