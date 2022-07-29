@@ -342,6 +342,7 @@ class Link extends UI5Element {
 	}
 
 	_onclick(event) {
+		event.stopPropagation();
 		const {
 			altKey,
 			ctrlKey,
@@ -350,7 +351,6 @@ class Link extends UI5Element {
 		} = event;
 
 		event.isMarked = "link";
-
 		const executeEvent = this.fireEvent("click", {
 			altKey,
 			ctrlKey,
