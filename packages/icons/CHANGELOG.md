@@ -8,6 +8,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @ui5/webcomponents-icons-tnt
 
 
+# [1.7.0](https://github.com/SAP/ui5-webcomponents/compare/v1.6.0...v1.7.0) (2022-09-02)
+
+
+### Features
+
+* **icons:** update to 4.14.0 5.0.2 SAP-Icons font ([#5605](https://github.com/SAP/ui5-webcomponents/issues/5605)) ([d794c0b](https://github.com/SAP/ui5-webcomponents/commit/d794c0b84ea03581cd969a84dc5c05383ec91b60))
+
+
+
+
+
 # [1.6.0](https://github.com/SAP/ui5-webcomponents/compare/v1.5.0...v1.6.0) (2022-07-25)
 
 **Note:** Version bump only for package @ui5/webcomponents-icons
