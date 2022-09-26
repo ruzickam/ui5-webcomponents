@@ -34,8 +34,17 @@ const uniqueDependenciesCache = new Map();
 function _invalidate(changeInfo) {
 	// Invalidation should be suppressed: 1) before the component is rendered for the first time 2) and during the execution of onBeforeRendering
 	// This is necessary not only as an optimization, but also to avoid infinite loops on invalidation between children and parents (when invalidateOnChildChange is used)
+	// Additionally, invalidation must not be suppressed when it is triggered by children for slots with invalidateOnChildChange set to true
 	if (this._suppressInvalidation) {
-		return;
+		if (changeInfo.type !== "slot" || (changeInfo.name === "default" && changeInfo.reason === "textcontent")) {
+			return; // do nothing if _suppressInvalidation is set, and the change comes from a property or a default slot with text
+		}
+
+		const slots = this.constructor.getMetadata().getSlots();
+		const slotData = slots[changeInfo.name];
+		if (!slotData.invalidateOnChildChange) {
+			return; // do nothing if _suppressInvalidation is set, and the change comes from a slot but this slot does not invalidate on child change
+		}
 	}
 
 	// Call the onInvalidation hook
