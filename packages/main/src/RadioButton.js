@@ -98,6 +98,18 @@ const metadata = {
 		},
 
 		/**
+		 * Defines whether the component is required.
+		 *
+		 * @type {boolean}
+		 * @defaultvalue false
+		 * @public
+		 * @since 1.9.0
+		 */
+		required: {
+			type: Boolean,
+		},
+
+		/**
 		 * Defines the value state of the component.
 		 * <br><br>
 		 * Available options are:
@@ -215,7 +227,7 @@ const metadata = {
 		 * Defines the active state (pressed or not) of the component.
 		 * @private
 		 */
-		 active: {
+		active: {
 			type: Boolean,
 		},
 	},
@@ -363,7 +375,11 @@ class RadioButton extends UI5Element {
 		const FormSupport = getFeature("FormSupport");
 		if (FormSupport) {
 			FormSupport.syncNativeHiddenInput(this, (element, nativeInput) => {
-				nativeInput.disabled = element.disabled || !element.checked;
+				nativeInput.type = "radio";
+				nativeInput.checked = element.checked;
+				// nativeInput.disabled = element.disabled || !element.checked && !element.required;
+				nativeInput.disabled = element.disabled;
+				nativeInput.required = element.required;
 				nativeInput.value = element.checked ? element.value : "";
 			});
 		} else if (this.value) {
@@ -472,6 +488,7 @@ class RadioButton extends UI5Element {
 		return {
 			main: {},
 			inner: {
+				"ui5-radio-inner": true,
 				"ui5-radio-inner--hoverable": !this.disabled && !this.readonly && isDesktop(),
 			},
 		};
@@ -479,6 +496,10 @@ class RadioButton extends UI5Element {
 
 	get ariaReadonly() {
 		return this.readonly ? "true" : undefined;
+	}
+
+	get ariaRequired() {
+		return this.required ? "true" : undefined;
 	}
 
 	get ariaDisabled() {

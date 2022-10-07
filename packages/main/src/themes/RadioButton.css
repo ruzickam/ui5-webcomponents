@@ -298,3 +298,12 @@
 :host(.ui5-li-singlesel-radiobtn) .ui5-radio-root .ui5-radio-inner .ui5-radio-svg-outer {
 	fill: var(--sapList_Background);
 }
+
+/* FormSupport - align the browser's native "required" tooltip with the SVG */
+:host([required]) ::slotted([data-ui5-form-support]) {
+	top: 75%;
+	--pad: 0.6875rem;
+	margin: 0;
+	--cen: calc(var(--_ui5_radio_button_svg_size) / 2);
+	left: calc(var(--pad) + var(--cen));
+}
