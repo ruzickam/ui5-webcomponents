@@ -3,6 +3,8 @@
     "compilerOptions": {
       "target": "ES2021",
       // Generate d.ts files
+      "jsx": "react-jsx",
+      "jsxImportSource": "@ui5/webcomponents-base/src/jsx",
       "declaration": true,
       "outDir": "dist",
       "skipLibCheck": true,

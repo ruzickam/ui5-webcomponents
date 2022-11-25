@@ -92,5 +92,9 @@
     "packages/tools",
     "packages/playground",
     "packages/create-package"
-  ]
+  ],
+  "dependencies": {
+    "@types/react": "^18.0.25",
+    "prettier": "^2.7.1"
+  }
 }

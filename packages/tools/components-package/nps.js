@@ -53,7 +53,7 @@ const getScripts = (options) => {
 		typescript: tsCommand,
 		build: {
 			default: "nps lint prepare build.bundle",
-			templates: `mkdirp dist/generated/templates && node "${LIB}/hbs2ui5/index.js" -d src/ -o dist/generated/templates`,
+			templates: `mkdirp dist/generated/templates && node "${LIB}/templates/compile.js" -d src/ -o dist/generated/templates`,
 			styles: {
 				default: "nps build.styles.themes build.styles.components",
 				themes: `node "${LIB}/postcss-p/postcss-p.mjs"`,
