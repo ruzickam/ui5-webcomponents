@@ -2,8 +2,8 @@
 import UploadCollectionComponent from "./UploadCollection.js";
 import {Show, For} from "@ui5/webcomponents-base/src/jsx/control-flow-elements";
 import {ListComponent} from "@ui5/webcomponents/src/List";
-import {IconComponent} from "@ui5/webcomponents/src/Icon";
-import {LabelComponent} from "@ui5/webcomponents/src/Label";
+import {IconComponent} from "@ui5/webcomponents/src/Icon/index";
+import {LabelComponent} from "@ui5/webcomponents/src/Label/index";
 /* eslint-disable */
 import { HTMLAttributes, ReactElement, ReactNode } from "react";
 

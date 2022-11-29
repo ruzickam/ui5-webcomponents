@@ -23,7 +23,9 @@ module.exports = (callee, name, imports) => {
     if (!imp) {
         throw new Error(`Could not resolve import for ${name}`);
     }
-
+    if (imp.path) {
+        debugger;
+    }
     const p = sync(imp.path, {
         basedir: path.dirname(callee),
         extensions: ['.js', '.jsx', '.ts', '.tsx']

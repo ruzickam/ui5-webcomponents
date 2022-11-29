@@ -187,19 +187,19 @@ module.exports = (ast, filePath) => {
                 }
             }
         },
-        JSXClosingElement(jsxClosingElement) {
-            const tagName = jsxClosingElement.node.name.name;
-            const isHTMLElement = isHtmlElement(tagName);
-            if (!isHTMLElement) {
-                const resolvedTagName = resolveCustomTagName(filePath, tagName, imports);
-                if (resolvedTagName !== tagName) {
-                    jsxClosingElement.replaceWith(
-                        types.jsxClosingElement(
-                            types.jsxIdentifier(resolvedTagName)
-                        )
-                    )
-                }
-            }
-        }
+        // JSXClosingElement(jsxClosingElement) {
+        //     const tagName = jsxClosingElement.node.name.name;
+        //     const isHTMLElement = isHtmlElement(tagName);
+        //     if (!isHTMLElement) {
+        //         const resolvedTagName = resolveCustomTagName(filePath, tagName, imports);
+        //         if (resolvedTagName !== tagName) {
+        //             jsxClosingElement.replaceWith(
+        //                 types.jsxClosingElement(
+        //                     types.jsxIdentifier(resolvedTagName)
+        //                 )
+        //             )
+        //         }
+        //     }
+        // }
     });
 }

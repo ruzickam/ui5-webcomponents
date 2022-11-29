@@ -51,6 +51,7 @@ import {
 	ARIA_LABEL_LIST_DELETABLE,
 	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
+import * as React from "react";
 
 const INFINITE_SCROLL_DEBOUNCE_RATE = 250; // ms
 
@@ -1137,3 +1138,4 @@ export type {
 	ToggleEventDetail,
 	SelectionChangeEventDetail,
 };
+export declare const ListComponent: React.FC<List>;
