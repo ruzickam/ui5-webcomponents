@@ -3,10 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.2](https://github.com/SAP/ui5-webcomponents/compare/v1.9.1...v1.9.2) (2022-12-15)
 
+### Features
+* **ui5-tree-item-custom**: introdocue new component ([#5962]https://github.com/SAP/ui5-webcomponents/pull/5962)
 
-**Note:** Version bump only for package ui5-webcomponents
+* **theming** update theming-base-content to 1.1.48([#15ed32]https://github.com/SAP/ui5-webcomponents/commit/d642e7caaade0609e667837aaa50c5e28915ed32)
 
+## Fixes
+
+* **ui5-side-navigation**: fix focus handling of tree inside popover ([#5962]https://github.com/SAP/ui5-webcomponents/pull/5962)
 
 
 
