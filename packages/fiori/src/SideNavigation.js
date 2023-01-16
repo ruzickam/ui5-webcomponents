@@ -5,8 +5,16 @@ import List from "@ui5/webcomponents/dist/List.js";
 import StandardListItem from "@ui5/webcomponents/dist/StandardListItem.js";
 import Tree from "@ui5/webcomponents/dist/Tree.js";
 import TreeItem from "@ui5/webcomponents/dist/TreeItem.js";
+import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import SideNavigationTemplate from "./generated/templates/SideNavigationTemplate.lit.js";
 import SideNavigationItemPopoverContentTemplate from "./generated/templates/SideNavigationItemPopoverContentTemplate.lit.js";
+import {
+	SIDE_NAVIGATION_POPOVER_HIDDEN_TEXT,
+	SIDE_NAVIGATION_COLLAPSED_LIST_ARIA_ROLE_DESC,
+	SIDE_NAVIGATION_COLLAPSED_LIST_ITEMS_ARIA_ROLE_DESC,
+	SIDE_NAVIGATION_LIST_ARIA_ROLE_DESC,
+	SIDE_NAVIGATION_LIST_ITEMS_ARIA_ROLE_DESC,
+} from "./generated/i18n/i18n-defaults.js";
 
 // Styles
 import SideNavigationCss from "./generated/themes/SideNavigation.css.js";
@@ -45,7 +53,7 @@ const metadata = {
 		 * inside the items.
 		 *
 		 * @public
-		 * @type {sap.ui.webcomponents.fiori.ISideNavigationItem[]}
+		 * @type {sap.ui.webcomponents.fiori.ISideNavigationItem}
 		 * @slot items
 		 */
 		"default": {
@@ -76,7 +84,7 @@ const metadata = {
 		 * <b>Note:</b> In order to achieve the best user experience, it is recommended that you keep the fixed items "flat" (do not pass sub-items)
 		 *
 		 * @public
-		 * @type {sap.ui.webcomponents.fiori.ISideNavigationItem[]}
+		 * @type {sap.ui.webcomponents.fiori.ISideNavigationItem}
 		 * @slot
 		 */
 		fixedItems: {
@@ -213,8 +221,31 @@ class SideNavigation extends UI5Element {
 		this._popoverContent = {
 			mainItem: item,
 			mainItemSelected: item.selected && !item.items.some(subItem => subItem.selected),
+			// add one as the first item is the main item
+			selectedSubItemIndex: item.items.findIndex(subItem => subItem.selected) + 1,
 			subItems: item.items,
 		};
+	}
+
+	async _onAfterOpen() {
+		// as the tree/list inside the popover is never destroyed,
+		// item navigation index should be managed, because items are
+		// dynamically recreated and tabIndexes are not updated
+		const tree = await this.getPickerTree();
+		const index = this._popoverContent.selectedSubItemIndex;
+		tree.focusItemByIndex(index);
+	}
+
+	get accSideNavigationPopoverHiddenText() {
+		return SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_POPOVER_HIDDEN_TEXT);
+	}
+
+	get ariaRoleDescNavigationList() {
+		return this.collapsed ? SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_COLLAPSED_LIST_ARIA_ROLE_DESC) : SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_LIST_ARIA_ROLE_DESC);
+	}
+
+	get ariaRoleDescNavigationListItem() {
+		return this.collapsed ? SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_COLLAPSED_LIST_ITEMS_ARIA_ROLE_DESC) : SideNavigation.i18nBundle.getText(SIDE_NAVIGATION_LIST_ITEMS_ARIA_ROLE_DESC);
 	}
 
 	handleTreeItemClick(event) {
@@ -240,7 +271,7 @@ class SideNavigation extends UI5Element {
 		}
 	}
 
-	handleListItemClick(event) {
+	handlePopoverItemClick(event) {
 		const listItem = event.detail.item;
 		const item = listItem.associatedItem;
 
@@ -262,9 +293,15 @@ class SideNavigation extends UI5Element {
 		responsivePopover.showAt(opener);
 	}
 
-	async closePicker(opener) {
+	async closePicker() {
 		const responsivePopover = await this.getPicker();
 		responsivePopover.close();
+	}
+
+	async getPickerTree() {
+		const picker = await this.getPicker();
+		const sideNav = picker.querySelector("[ui5-side-navigation]");
+		return sideNav._itemsTree;
 	}
 
 	get hasHeader() {
@@ -299,6 +336,13 @@ class SideNavigation extends UI5Element {
 				callback(currentSubitem);
 			});
 		});
+	}
+
+	static async onDefine() {
+		[SideNavigation.i18nBundle] = await Promise.all([
+			getI18nBundle("@ui5/webcomponents"),
+			super.onDefine(),
+		]);
 	}
 }
 
