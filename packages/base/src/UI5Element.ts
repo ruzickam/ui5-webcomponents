@@ -1126,7 +1126,7 @@ abstract class UI5Element extends HTMLElement {
 			return this._metadata;
 		}
 
-		const effectiveMetadata = Object.keys(this.metadata).length ? this.metadata : this.decoratorMetadata;
+		const effectiveMetadata = merge(this.metadata, this.decoratorMetadata) as Metadata;
 		const metadataObjects = [effectiveMetadata];
 		let klass = this; // eslint-disable-line
 		while (klass !== UI5Element) {
