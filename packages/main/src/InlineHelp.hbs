@@ -1,1 +1,11 @@
-Hello world from custom component
+<div style="display: inline-block" class="popover-trigger">
+    {{#if _trigger}}
+        <slot name="trigger"></slot>
+    {{else}}
+        <ui5-icon name="{{icon}}"></ui5-icon>
+    {{/if}}
+</div>
+
+<ui5-popover>
+    {{ text }}
+</ui5-popover>
