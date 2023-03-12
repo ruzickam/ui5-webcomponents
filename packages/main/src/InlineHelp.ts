@@ -30,14 +30,35 @@ export class InlineHelp extends UI5Element implements ITabbable {
 	@property()
 	text!: string;
 
+	/**
+	 * Every odd member of the passed list will be opener event and every even will be closer
+	 */
+	@property()
+	set triggers(val: string | string[]) {
+		console.log(val);
+		const providedEventNames = Array.isArray(val) ? val : val.replace(/ /g, "").split(",");
+		this._clearTriggers();
+		this._triggers = providedEventNames;
+		this._initializeTriggers();
+	}
+
+	get triggers() {
+		return this._triggers;
+	}
+
 	@slot()
 	private trigger?: Array<HTMLElement>;
 
 	@query(Popover)
 	_popover?: Popover;
 
-	@query(".popover-trigger")
+	@query(".ui5-popover-trigger")
 	_popoverTrigger?: HTMLDivElement;
+
+	_onComponentStateFinalized() {
+		console.log(this._state);
+	}
+	private _triggers: string[] = ["mouseenter", "mouseleave"];
 
 	get _trigger(): HTMLElement | undefined {
 		return this.trigger?.[0];
@@ -45,6 +66,20 @@ export class InlineHelp extends UI5Element implements ITabbable {
 
 	get tabindex() {
 		return this._tabIndex || "0";
+	}
+
+	private _clearTriggers() {
+		this._triggers.forEach((triggerEventName, index) => {
+			const callback = index % 2 === 0 ? this.open : this.close;
+			this._popoverTrigger!.removeEventListener(triggerEventName, callback);
+		});
+	}
+
+	private _initializeTriggers() {
+		this._triggers.forEach((triggerEventName, index) => {
+			const callback = index % 2 === 0 ? this.open : this.close;
+			this._popoverTrigger!.addEventListener(triggerEventName, callback);
+		});
 	}
 
 	open = () => {
@@ -65,13 +100,12 @@ export class InlineHelp extends UI5Element implements ITabbable {
 	}
 
 	onAfterRendering() {
-		this._popoverTrigger!.addEventListener("mouseenter", this.open);
-		this._popoverTrigger!.addEventListener("mouseleave", this.close);
+		console.log(this._triggers);
+		this._initializeTriggers();
 	}
 
 	onExitDOM() {
-		this._popoverTrigger!.removeEventListener("mouseenter", this.open);
-		this._popoverTrigger!.removeEventListener("mouseleave", this.close);
+		this._clearTriggers();
 	}
 }
 
