@@ -1,11 +1,12 @@
-<div style="display: inline-block" class="ui5-popover-trigger">
+<div style="display: inline-block" class="ui5-popover-trigger" tabindex="0">
     {{#if _trigger}}
-        <slot name="trigger"></slot>
+        <slot></slot>
     {{else}}
-        <ui5-icon name="{{icon}}"></ui5-icon>
+        <ui5-icon name="{{icon}}" tabindex="0"></ui5-icon>
     {{/if}}
 </div>
 
-<ui5-popover>
+<ui5-popover placement-type="{{placementType}}">
+    <slot name="content"></slot>
     {{ text }}
 </ui5-popover>

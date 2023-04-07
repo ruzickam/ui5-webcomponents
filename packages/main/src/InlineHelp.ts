@@ -1,4 +1,4 @@
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import UI5Element, { ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
 
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
@@ -12,6 +12,21 @@ import styles from "./generated/themes/InlineHelp.css.js";
 import Icon from "./Icon.js";
 import Popover from "./Popover.js";
 import "@ui5/webcomponents-icons/dist/question-mark.js";
+import PopoverPlacementType from "./types/PopoverPlacementType.js";
+
+interface BaseInlineHelpTrigger {
+	isOpenAction: boolean;
+	eventName: string;
+}
+
+interface InlineHelpOpenTrigger extends BaseInlineHelpTrigger {
+	isOpenAction: true;
+	preventInitialFocus?: boolean;
+}
+
+type InlineHelpTrigger = InlineHelpOpenTrigger | BaseInlineHelpTrigger;
+
+type Handler = (event: Event) => void;
 
 @customElement({
 	tag: "ui5-inline-help",
@@ -30,24 +45,20 @@ export class InlineHelp extends UI5Element implements ITabbable {
 	@property()
 	text!: string;
 
+	@property()
+	placementType?: `${PopoverPlacementType}`;
+
 	/**
 	 * Every odd member of the passed list will be opener event and every even will be closer
 	 */
-	@property()
-	set triggers(val: string | string[]) {
-		console.log(val);
-		const providedEventNames = Array.isArray(val) ? val : val.replace(/ /g, "").split(",");
-		this._clearTriggers();
-		this._triggers = providedEventNames;
-		this._initializeTriggers();
-	}
+	@property({ noAttribute: true })
+	triggers: string | string[] | InlineHelpTrigger[] = "mouseenter,mouseleave,focusin,focusout";
 
-	get triggers() {
-		return this._triggers;
-	}
+	@slot({ type: Node })
+	private content?: Array<Node>;
 
-	@slot()
-	private trigger?: Array<HTMLElement>;
+	@slot({ "default": true, type: Node })
+	private trigger?: Array<Node>;
 
 	@query(Popover)
 	_popover?: Popover;
@@ -55,12 +66,10 @@ export class InlineHelp extends UI5Element implements ITabbable {
 	@query(".ui5-popover-trigger")
 	_popoverTrigger?: HTMLDivElement;
 
-	_onComponentStateFinalized() {
-		console.log(this._state);
+	_onComponentStateFinalized = () => {
 	}
-	private _triggers: string[] = ["mouseenter", "mouseleave"];
 
-	get _trigger(): HTMLElement | undefined {
+	get _trigger(): Node | undefined {
 		return this.trigger?.[0];
 	}
 
@@ -68,40 +77,62 @@ export class InlineHelp extends UI5Element implements ITabbable {
 		return this._tabIndex || "0";
 	}
 
+	private eventHandlersMap = new WeakMap<InlineHelpTrigger, Handler>();
+
+	private _triggers?: InlineHelpTrigger[];
+
+	constructor() {
+		super();
+	}
+
 	private _clearTriggers() {
-		this._triggers.forEach((triggerEventName, index) => {
-			const callback = index % 2 === 0 ? this.open : this.close;
-			this._popoverTrigger!.removeEventListener(triggerEventName, callback);
+		this._triggers?.forEach(trigger => {
+			const handler = this.eventHandlersMap.get(trigger) as Handler;
+			this._popoverTrigger!.removeEventListener(trigger.eventName, handler);
 		});
 	}
 
 	private _initializeTriggers() {
-		this._triggers.forEach((triggerEventName, index) => {
-			const callback = index % 2 === 0 ? this.open : this.close;
-			this._popoverTrigger!.addEventListener(triggerEventName, callback);
+		const normalizedTriggers = Array.isArray(this.triggers) ? this.triggers : this.triggers.replace(/ /g, "").split(",");
+		this._triggers = normalizedTriggers.map((triggerEventName, index) => {
+			if (typeof triggerEventName === "string") {
+				return {
+					eventName: triggerEventName,
+					isOpenAction: index % 2 === 0,
+				};
+			}
+
+			return triggerEventName;
+		});
+
+		this._triggers?.forEach(trigger => {
+			const handler = trigger.isOpenAction ? this.open(trigger as InlineHelpOpenTrigger) : this.close();
+			this.eventHandlersMap.set(trigger, handler);
+			this._popoverTrigger!.addEventListener(trigger.eventName, handler);
 		});
 	}
 
-	open = () => {
-		this._popover!.showAt(this._popoverTrigger!);
+	private syncTriggers(): void {
+		this._clearTriggers();
+		this._initializeTriggers();
 	}
 
-	close = () => {
-		this._popover!.close();
+	open = (options: Omit<InlineHelpOpenTrigger, "eventName" | "isOpenAction">) => {
+		return () => this._popover!.showAt(this._popoverTrigger!, !!options?.preventInitialFocus);
 	}
 
-	toggle = () => {
-		// Eslint rules do not allow me to do it more elegantly.
-		if (this._popover!.isOpen()) {
-			this.close();
-		} else {
-			this.open();
+	close = (): () => void => {
+		return () => this._popover!.close();
+	}
+
+	onInvalidation(changes: ChangeInfo) {
+		if ((changes.type === "slot" && changes.name === "trigger") || (changes.type === "property" && changes.name === "triggers")) {
+			this.syncTriggers();
 		}
 	}
 
-	onAfterRendering() {
-		console.log(this._triggers);
-		this._initializeTriggers();
+	onEnterDOM() {
+		this.syncTriggers();
 	}
 
 	onExitDOM() {

@@ -2,41 +2,48 @@
 <html>
 
 <head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>ui5-inline-help</title>
-		<script src="../../bundle.esm.js" type="module"></script>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>ui5-inline-help</title>
+	<script src="../../bundle.esm.js" type="module"></script>
 </head>
 
 <style>
-		html,
-		body {
-				margin: 0;
-				padding: 0;
-				height: 100%;
-				width: 100%;
-		}
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+		height: 100%;
+		width: 100%;
+	}
 
-		body {
-				padding: 1rem;
-				box-sizing: border-box;
-		}
+	body {
+		padding: 1rem;
+		box-sizing: border-box;
+	}
 </style>
 
 <body>
-		<p>
-				<ui5-inline-help text="Inline Help with custom triggerer" triggers="focusin,focusout">
-						<span slot="trigger">test</span>
-				</ui5-inline-help>
-		</p>
+<p>
+	<ui5-inline-help id="customEventsInlineHelp">
+		Inline Help with custom trigger and a template for popover
+		<span slot="content" style="color: red">Hello there</span>
+	</ui5-inline-help>
+</p>
 
-		<p>
-				<ui5-inline-help text="Inline Help with default icon triggerer"></ui5-inline-help>
-		</p>
+<p>
+	<ui5-inline-help text="Inline Help with default icon trigger and bottom placement" placement-type="Bottom"></ui5-inline-help>
+</p>
 
-		<p>
-				<ui5-inline-help text="Inline Help with different icon" icon="accelerated"></ui5-inline-help>
-		</p>
+<p>
+	<ui5-inline-help text="Inline Help with different icon" icon="accelerated"></ui5-inline-help>
+</p>
 </body>
+
+<script>
+	setTimeout(() => {
+		document.querySelector('#customEventsInlineHelp').triggers = 'focusin';
+	}, 1000)
+</script>
 
 </html>
