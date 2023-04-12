@@ -42,6 +42,118 @@
 	border-color: var(--sapMessage_SuccessBorderColor);
 }
 
+:host([color-scheme="Accent1"]) .ui5-message-strip-root--custom {
+	background-color: var(--sapAvatar_1_Background);
+	color: var(--sapAvatar_1_BorderColor);
+	/* border-color: var(--ui5-avatar-accent1-border-color); */
+}
+
+:host([color-scheme="Accent1"]) .ui5-message-strip-root--custom .ui5-message-strip-close-button,
+:host([color-scheme="Accent1"]) ::slotted([slot="icon"]) {
+	color: var(--sapAvatar_1_TextColor);
+}
+
+:host([color-scheme="Accent2"]) .ui5-message-strip-root--custom {
+	background-color: var(--sapAvatar_2_Background);
+	color: var(--sapAvatar_2_BorderColor);
+	/* border-color: var(--ui5-avatar-accent1-border-color); */
+}
+
+:host([color-scheme="Accent2"]) .ui5-message-strip-root--custom .ui5-message-strip-close-button,
+:host([color-scheme="Accent2"]) ::slotted([slot="icon"]) {
+	color: var(--sapAvatar_2_TextColor);
+}
+
+:host([color-scheme="Accent3"]) .ui5-message-strip-root--custom {
+	background-color: var(--sapAvatar_3_Background);
+	color: var(--sapAvatar_3_BorderColor);
+	/* border-color: var(--ui5-avatar-accent1-border-color); */
+}
+
+:host([color-scheme="Accent3"]) .ui5-message-strip-root--custom .ui5-message-strip-close-button,
+:host([color-scheme="Accent3"]) ::slotted([slot="icon"]) {
+	color: var(--sapAvatar_3_TextColor);
+}
+
+:host([color-scheme="Accent4"]) .ui5-message-strip-root--custom {
+	background-color: var(--sapAvatar_4_Background);
+	color: var(--sapAvatar_4_BorderColor);
+	/* border-color: var(--ui5-avatar-accent1-border-color); */
+}
+
+:host([color-scheme="Accent4"]) .ui5-message-strip-root--custom .ui5-message-strip-close-button,
+:host([color-scheme="Accent4"]) ::slotted([slot="icon"]) {
+	color: var(--sapAvatar_4_TextColor);
+}
+
+:host([color-scheme="Accent5"]) .ui5-message-strip-root--custom {
+	background-color: var(--sapAvatar_5_Background);
+	color: var(--sapAvatar_5_BorderColor);
+	/* border-color: var(--ui5-avatar-accent1-border-color); */
+}
+
+:host([color-scheme="Accent5"]) .ui5-message-strip-root--custom .ui5-message-strip-close-button,
+:host([color-scheme="Accent5"]) ::slotted([slot="icon"]) {
+	color: var(--sapAvatar_5_TextColor);
+}
+
+:host(:not([color-scheme])) .ui5-message-strip-root--custom, :host([color-scheme="Accent6"]) .ui5-message-strip-root--custom {
+	background-color: var(--sapAvatar_6_Background);
+	color: var(--sapAvatar_6_BorderColor);
+	/* border-color: var(--ui5-avatar-accent1-border-color); */
+}
+
+:host(:not([color-scheme])) .ui5-message-strip-root--custom .ui5-message-strip-close-button,
+:host([color-scheme="Accent6"]) .ui5-message-strip-root--custom .ui5-message-strip-close-button,
+:host(:not([color-scheme])) .ui5-message-strip-root--custom ::slotted([slot="icon"]),
+:host([color-scheme="Accent6"]) ::slotted([slot="icon"]) {
+	color: var(--sapAvatar_6_TextColor);
+}
+
+:host([color-scheme="Accent7"]) .ui5-message-strip-root--custom {
+	background-color: var(--sapAvatar_7_Background);
+	color: var(--sapAvatar_7_BorderColor);
+	/* border-color: var(--ui5-avatar-accent1-border-color); */
+}
+
+:host([color-scheme="Accent7"]) .ui5-message-strip-root--custom .ui5-message-strip-close-button,
+:host([color-scheme="Accent7"]) ::slotted([slot="icon"]) {
+	color: var(--sapAvatar_7_TextColor);
+}
+
+:host([color-scheme="Accent8"]) .ui5-message-strip-root--custom {
+	background-color: var(--sapAvatar_8_Background);
+	color: var(--sapAvatar_8_BorderColor);
+	/* border-color: var(--ui5-avatar-accent1-border-color); */
+}
+
+:host([color-scheme="Accent8"]) .ui5-message-strip-root--custom .ui5-message-strip-close-button,
+:host([color-scheme="Accent8"]) ::slotted([slot="icon"]) {
+	color: var(--sapAvatar_8_TextColor);
+}
+
+:host([color-scheme="Accent9"]) .ui5-message-strip-root--custom {
+	background-color: var(--sapAvatar_9_Background);
+	color: var(--sapAvatar_9_BorderColor);
+	/* border-color: var(--ui5-avatar-accent1-border-color); */
+}
+
+:host([color-scheme="Accent9"]) .ui5-message-strip-root--custom .ui5-message-strip-close-button,
+:host([color-scheme="Accent9"]) ::slotted([slot="icon"]) {
+	color: var(--sapAvatar_9_TextColor);
+}
+
+:host([color-scheme="Accent10"]) .ui5-message-strip-root--custom {
+	background-color: var(--sapAvatar_10_Background);
+	color: var(--sapAvatar_10_BorderColor);
+	/* border-color: var(--ui5-avatar-accent1-border-color); */
+}
+
+:host([color-scheme="Accent10"]) .ui5-message-strip-root--custom .ui5-message-strip-close-button,
+:host([color-scheme="Accent10"]) ::slotted([slot="icon"]) {
+	color: var(--sapAvatar_10_TextColor);
+}
+
 .ui5-message-strip-root--positive .ui5-message-strip-icon {
 	color: var(--sapPositiveElementColor);
 }

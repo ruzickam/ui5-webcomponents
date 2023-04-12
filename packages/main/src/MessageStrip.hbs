@@ -13,7 +13,9 @@
 			{{#if iconProvided}}
 				<slot name="icon"></slot>
 			{{else}}
-				<ui5-icon name="{{standardIconName}}" class="ui5-message-strip-icon"></ui5-icon>
+				{{#if standardIconName}}
+					<ui5-icon name="{{standardIconName}}" class="ui5-message-strip-icon"></ui5-icon>
+				{{/if}}
 			{{/if}}
 		</div>
 	{{/unless}}
