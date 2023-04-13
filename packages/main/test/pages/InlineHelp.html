@@ -25,25 +25,24 @@
 
 <body>
 <p>
-	<ui5-inline-help id="customEventsInlineHelp">
-		Inline Help with custom trigger and a template for popover
-		<span slot="content" style="color: red">Hello there</span>
+	<ui5-inline-help id="customTriggerInlineHelp" text="Inline Help with custom template for trigger">
+		<span id="customTrigger">Custom trigger</span>
 	</ui5-inline-help>
 </p>
 
 <p>
-	<ui5-inline-help text="Inline Help with default icon trigger and bottom placement" placement-type="Bottom"></ui5-inline-help>
+	<ui5-inline-help id="customPopoverContent">
+		<span slot="content">Inline Help with custom popover content</span>
+	</ui5-inline-help>
 </p>
 
 <p>
-	<ui5-inline-help text="Inline Help with different icon" icon="accelerated"></ui5-inline-help>
+	<ui5-inline-help id="differentIconInlineHelp" text="Inline Help with different icon" icon="accelerated"></ui5-inline-help>
+</p>
+
+<p>
+	<ui5-inline-help id="differentPlacementTypeInlineHelp" text="Inline Help different placement-type" placement-type="Top"></ui5-inline-help>
 </p>
 </body>
-
-<script>
-	setTimeout(() => {
-		document.querySelector('#customEventsInlineHelp').triggers = 'focusin';
-	}, 1000)
-</script>
 
 </html>
