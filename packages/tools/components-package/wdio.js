@@ -6,7 +6,7 @@ exports.config = {
 	//
 	// WebdriverIO allows it to run your tests in arbitrary locations (e.g. locally or
 	// on a remote machine).
-	runner: 'local',
+	runner: "local",
 
 	//
 	// ==================
@@ -18,7 +18,7 @@ exports.config = {
 	// directory is where your package.json resides, so `wdio` will be called from there.
 	//
 	specs: [
-		'./test/specs/**/*.js'
+		"./test/specs/**/*.js",
 	],
 	// Patterns to exclude.
 	exclude: [
@@ -52,13 +52,13 @@ exports.config = {
 		// 5 instances get started at a time.
 		maxInstances: 5,
 		//
-		browserName: 'chrome',
-		'goog:chromeOptions': {
+		browserName: "chrome",
+		"goog:chromeOptions": {
 			// to run chrome headless the following flags are required
 			// (see https://developers.google.com/web/updates/2017/04/headless-chrome)
-			args: ['--headless', '--disable-gpu'],
+			args: ["--headless", "--disable-gpu"],
 			// args: ['--disable-gpu'],
-		}
+		},
 	}],
 	//
 	// port to find chromedriver
@@ -69,7 +69,7 @@ exports.config = {
 	// Define all options that are relevant for the WebdriverIO instance here
 	//
 	// Level of logging verbosity: trace | debug | info | warn | error
-	logLevel: 'error',
+	logLevel: "error",
 	//
 	// Warns when a deprecated command is used
 	deprecationWarnings: true,
@@ -82,8 +82,8 @@ exports.config = {
 	// with `/`, the base url gets prepended, not including the path portion of your baseUrl.
 	// If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
 	// gets prepended directly.
-	baseUrl: 'http://localhost:4567', // This is important since WDIO 7+ does not accept an empty string for baseUrl
-	path: '',
+	baseUrl: "http://localhost:4567", // This is important since WDIO 7+ does not accept an empty string for baseUrl
+	path: "",
 	//
 	// Default timeout for all waitFor* commands.
 	waitforTimeout: 10000,
@@ -99,35 +99,35 @@ exports.config = {
 	// Services take over a specific job you don't want to take care of. They enhance
 	// your test setup with almost no effort. Unlike plugins, they don't add new
 	// commands. Instead, they hook themselves up into the test process.
-	services: ['chromedriver', 'devtools',
-		['static-server', {
+	services: ["chromedriver", "devtools",
+		["static-server", {
 			folders: [
-				{ mount: '/', path: './dist' },
+				{ mount: "/", path: "./dist" },
 			],
-			port: '4567',
+			port: "4567",
 		}],
 	],
 	// options
-	chromeDriverArgs: ['--port=9515'], // default
+	chromeDriverArgs: ["--port=9515"], // default
 	// Framework you want to run your specs with.
 	// The following are supported: Mocha, Jasmine, and Cucumber
 	// see also: https://webdriver.io/docs/frameworks.html
 	//
 	// Make sure you have the wdio adapter package for the specific framework installed
 	// before running any tests.
-	framework: 'mocha',
+	framework: "mocha",
 	//
 	// Test reporter for stdout.
 	// The only one supported by default is 'dot'
 	// see also: https://webdriver.io/docs/dot-reporter.html
-	reporters: ['dot', 'spec'],
+	reporters: ["dot", "spec"],
 
 	//
 	// Options to be passed to Mocha.
 	// See the full list at http://mochajs.org/
 	mochaOpts: {
-		ui: 'bdd',
-		timeout: 60000
+		ui: "bdd",
+		timeout: 60000,
 	},
 	//
 	// =====
@@ -159,9 +159,9 @@ exports.config = {
 	 * @param {Array.<Object>} capabilities list of capabilities details
 	 * @param {Array.<String>} specs List of spec file paths that are to be run
 	 */
-	before: async function (capabilities, specs) {
+	async before(capabilities, specs) {
 		await browser.addCommand("isFocusedDeep", async function () {
-			return browser.executeAsync(function (elem, done) {
+			return browser.executeAsync((elem, done) => {
 				let activeElement = document.activeElement;
 
 				while (activeElement.shadowRoot) {
@@ -176,7 +176,7 @@ exports.config = {
 		}, true);
 
 		await browser.addCommand("isFocusedDeepElement", async function (element) {
-			return browser.executeAsync(function (elem, element, done) {
+			return browser.executeAsync((elem, element, done) => {
 				let activeElement = document.activeElement;
 
 				while (activeElement.shadowRoot) {
@@ -190,47 +190,47 @@ exports.config = {
 			}, this, element);
 		}, true);
 
-		await browser.addCommand("setProperty", async function(property, value) {
+		await browser.addCommand("setProperty", async function (property, value) {
 			return browser.executeAsync((elem, property, value, done) => {
 				elem[property] = value;
 				done();
 			}, this, property, value);
 		}, true);
 
-		await browser.addCommand("setAttribute", async function(attribute, value) {
+		await browser.addCommand("setAttribute", async function (attribute, value) {
 			return browser.executeAsync((elem, attribute, value, done) => {
 				elem.setAttribute(attribute, value);
 				done();
 			}, this, attribute, value);
 		}, true);
 
-		await browser.addCommand("removeAttribute", async function(attribute) {
+		await browser.addCommand("removeAttribute", async function (attribute) {
 			return browser.executeAsync((elem, attribute, done) => {
 				elem.removeAttribute(attribute);
 				done();
 			}, this, attribute);
 		}, true);
 
-		await browser.addCommand("hasClass", async function(className) {
+		await browser.addCommand("hasClass", async function (className) {
 			return browser.executeAsync((elem, className, done) => {
 				done(elem.classList.contains(className));
 			}, this, className);
 		}, true);
 
-		await browser.addCommand("hasAttribute", async function(attrName) {
+		await browser.addCommand("hasAttribute", async function (attrName) {
 			return browser.executeAsync((elem, attrName, done) => {
 				done(elem.hasAttribute(attrName));
 			}, this, attrName);
 		}, true);
 
-		await browser.addCommand("getStaticAreaItemClassName", async function(selector) {
+		await browser.addCommand("getStaticAreaItemClassName", async selector => {
 			return browser.executeAsync(async (selector, done) => {
 				const staticAreaItem = await document.querySelector(selector).getStaticAreaItemDomRef();
 				done(staticAreaItem.host.classList[0]);
 			}, selector);
 		}, false);
 
-		await browser.addLocatorStrategy('activeElement', (selector) => {
+		await browser.addLocatorStrategy("activeElement", selector => {
 			return document.querySelector(selector).shadowRoot.activeElement;
 		});
 	},
@@ -239,7 +239,7 @@ exports.config = {
 	 * @param {String} commandName hook command name
 	 * @param {Array} args arguments that command would receive
 	 */
-	beforeCommand: async function (commandName, args) {
+	async beforeCommand(commandName, args) {
 		const waitFor = [
 			"$",
 			"$$",
@@ -264,7 +264,7 @@ exports.config = {
 			"shadow$$",
 		];
 		if (waitFor.includes(commandName)) {
-			await browser.executeAsync(function (done) {
+			await browser.executeAsync(done => {
 				window["sap-ui-webcomponents-bundle"].renderFinished().then(done);
 			});
 		}
@@ -314,11 +314,10 @@ exports.config = {
 	 * @param {Number} result 0 - command success, 1 - command error
 	 * @param {Object} error error object if any
 	 */
-	afterCommand: async function (commandName, args, result, error) {
-
+	async afterCommand(commandName, args, result, error) {
 		// url -> set configuration first
 		if (commandName === "url" && !args[0].includes("do-not-change-configuration")) {
-			await browser.executeAsync(function(done) {
+			await browser.executeAsync(done => {
 				window["sap-ui-webcomponents-bundle"].configuration.setNoConflict(true);
 				done();
 			});
@@ -346,11 +345,11 @@ exports.config = {
 		];
 
 		if (waitFor.includes(commandName)) {
-			await browser.executeAsync(function (done) {
+			await browser.executeAsync(done => {
 				window["sap-ui-webcomponents-bundle"].renderFinished().then(done);
 			});
 		} else if (waitForWithDelay.includes(commandName)) {
-			await browser.executeAsync(function (done) {
+			await browser.executeAsync(done => {
 				setTimeout(() => {
 					window["sap-ui-webcomponents-bundle"].renderFinished().then(done);
 				}, 10);
@@ -388,6 +387,6 @@ exports.config = {
 	 * @param {String} oldSessionId session ID of the old session
 	 * @param {String} newSessionId session ID of the new session
 	 */
-	//onReload: function(oldSessionId, newSessionId) {
-	//}
-}
+	// onReload: function(oldSessionId, newSessionId) {
+	// }
+};
