@@ -63,7 +63,7 @@ type Handler = (event: Event) => void;
 	styles,
 	dependencies: [Icon, Popover],
 })
-export class InlineHelp extends UI5Element implements ITabbable {
+class InlineHelp extends UI5Element implements ITabbable {
 	@property({ noAttribute: true })
 	_tabIndex!: string;
 
@@ -82,12 +82,11 @@ export class InlineHelp extends UI5Element implements ITabbable {
 	 * See all the available icons in the <ui5-link target="_blank" href="https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html">Icon Explorer</ui5-link>.
 	 * @type {string}
 	 * @name sap.ui.webc.main.InlineHelp.prototype.icon
-	 * @defaultvalue ""
+	 * @defaultvalue "question-mark"
 	 * @public
-	 * @property icon
 	 */
-	@property()
-	icon = "question-mark";
+	@property({ defaultValue: "question-mark" })
+	icon!: string;
 
 	/**
 	 * Defines the text which will be displayed in the popover.
@@ -98,7 +97,6 @@ export class InlineHelp extends UI5Element implements ITabbable {
 	 * @name sap.ui.webc.main.InlineHelp.prototype.text
 	 * @defaultvalue ""
 	 * @public
-	 * @property text
 	 */
 	@property()
 	text?: string;
@@ -136,7 +134,6 @@ export class InlineHelp extends UI5Element implements ITabbable {
 	 * <b>Note:</b> If the list contains more than two members, the first one will be opener and the last one will be closer.
 	 * <br>
 	 * @type {string[] | string | object[]}
-	 * @property triggers
 	 * @name sap.ui.webc.main.InlineHelp.prototype.triggers
 	 * @defaultvalue "mouseenter,mouseleave,focusin,focusout"
 	 * @public
@@ -153,7 +150,7 @@ export class InlineHelp extends UI5Element implements ITabbable {
 	 * @public
 	 */
 	@slot({ type: Node })
-	private content?: Array<Node>;
+	content?: Array<Node>;
 
 	/**
 	 * Defines the trigger element of the popover.
@@ -162,8 +159,8 @@ export class InlineHelp extends UI5Element implements ITabbable {
 	 * @name sap.ui.webc.main.InlineHelp.prototype.default
 	 * @public
 	 */
-	@slot({ "default": true, type: Node })
-	private trigger?: Array<Node>;
+	@slot({ "default": true, type: HTMLElement })
+	trigger?: Array<Node>;
 
 	@query(Popover)
 	_popover?: Popover;

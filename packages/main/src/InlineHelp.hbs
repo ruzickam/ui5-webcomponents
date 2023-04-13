@@ -7,6 +7,9 @@
 </div>
 
 <ui5-popover placement-type="{{placementType}}">
-    <slot name="content"></slot>
-    {{ text }}
+    {{#if text}}
+        {{ text }}
+    {{else}}
+        <slot name="content"></slot>
+    {{/if}}
 </ui5-popover>
