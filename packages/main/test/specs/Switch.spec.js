@@ -1,4 +1,4 @@
-const assert = require("chai").assert;
+import { assert } from "chai";
 
 describe("Switch general interaction", async () => {
 	before(async () => {
@@ -51,6 +51,15 @@ describe("Switch general interaction", async () => {
 		const switchEl = await browser.$("#noLabel").shadow$("div");
 
 		assert.notOk(await switchEl.getAttribute("aria-label"), "Attribute is reflected");
+	});
+
+	it("tests change event - value is not changed", async () => {
+		const switchPrevented = await browser.$("#switchprevented");
+		const currentChecked = await switchPrevented.getProperty("checked");
+
+		await switchPrevented.click();
+
+		assert.strictEqual(await switchPrevented.getProperty("checked"), currentChecked, "The switch is not checked");
 	});
 
 });

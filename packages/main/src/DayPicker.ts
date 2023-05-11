@@ -5,7 +5,7 @@ import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
 import type LocaleData from "@ui5/webcomponents-localization/dist/LocaleData.js";
 import { getFirstDayOfWeek } from "@ui5/webcomponents-base/dist/config/FormatSettings.js";
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
-import I18nBundle, { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
+import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import {
 	isSpace,
 	isSpaceShift,
@@ -40,7 +40,6 @@ import {
 	DAY_PICKER_WEEK_NUMBER_TEXT,
 	DAY_PICKER_NON_WORKING_DAY,
 	DAY_PICKER_TODAY,
-	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -103,7 +102,11 @@ type DayPickerNavigateEventDetail = {
  * @tagname ui5-daypicker
  * @public
  */
-@customElement("ui5-daypicker")
+@customElement({
+	tag: "ui5-daypicker",
+	styles: dayPickerCSS,
+	template: DayPickerTemplate,
+})
 /**
  * Fired when the selected date(s) change
  * @public
@@ -195,14 +198,6 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 
 	_autoFocus?: boolean;
 
-	static get template() {
-		return DayPickerTemplate;
-	}
-
-	static get styles() {
-		return dayPickerCSS;
-	}
-
 	static i18nBundle: I18nBundle;
 
 	onBeforeRendering() {
@@ -226,8 +221,8 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		const firstDayOfWeek = this._getFirstDayOfWeek();
 		const monthsNames = localeData.getMonths("wide", this._primaryCalendarType) as Array<string>;
 		const secondaryMonthsNames = this.hasSecondaryCalendarType ? localeData.getMonths("wide", this.secondaryCalendarType) as Array<string> : [];
-		const nonWorkingDayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_NON_WORKING_DAY as I18nText);
-		const todayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_TODAY as I18nText);
+		const nonWorkingDayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_NON_WORKING_DAY);
+		const todayLabel = DayPicker.i18nBundle.getText(DAY_PICKER_TODAY);
 		const tempDate = this._getFirstDay(); // date that will be changed by 1 day 42 times
 		const todayDate = CalendarDate.fromLocalJSDate(new Date(), this._primaryCalendarType); // current day date - calculate once
 		const calendarDate = this._calendarDate; // store the _calendarDate value as this getter is expensive and degrades IE11 perf
@@ -352,7 +347,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 		this._dayNames = [];
 		this._dayNames.push({
 			classes: "ui5-dp-dayname",
-			name: DayPicker.i18nBundle.getText(DAY_PICKER_WEEK_NUMBER_TEXT as I18nText),
+			name: DayPicker.i18nBundle.getText(DAY_PICKER_WEEK_NUMBER_TEXT),
 		});
 		for (let i = 0; i < DAYS_IN_WEEK; i++) {
 			dayOfTheWeek = i + this._getFirstDayOfWeek();
@@ -717,7 +712,7 @@ class DayPicker extends CalendarPart implements ICalendarPicker {
 	 * @private
 	 */
 	_updateSecondTimestamp() {
-		if (this.selectionMode === CalendarSelectionMode.Range && this.selectedDates.length === 1) {
+		if (this.selectionMode === CalendarSelectionMode.Range && (this.selectedDates.length === 1 || this.selectedDates.length === 2)) {
 			this._secondTimestamp = this.timestamp;
 		}
 	}

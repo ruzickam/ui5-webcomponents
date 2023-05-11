@@ -1,14 +1,12 @@
 import { isDesktop } from "@ui5/webcomponents-base/dist/Device.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import languageAware from "@ui5/webcomponents-base/dist/decorators/languageAware.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import { getFeature } from "@ui5/webcomponents-base/dist/FeaturesRegistry.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AriaLabelHelper.js";
@@ -21,7 +19,6 @@ import {
 	VALUE_STATE_ERROR,
 	VALUE_STATE_WARNING,
 	VALUE_STATE_SUCCESS,
-	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -62,6 +59,16 @@ let activeCb: CheckBox;
  * property to <code>true</code>.
  *
  * <br><br>
+ * <h3>CSS Shadow Parts</h3>
+ *
+ * <ui5-link target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/::part">CSS Shadow Parts</ui5-link> allow developers to style elements inside the Shadow DOM.
+ * <br>
+ * The <code>ui5-checkbox</code> exposes the following CSS Shadow Parts:
+ * <ul>
+ * <li>root - Used to style the outermost wrapper of the <code>ui5-checkbox</code></li>
+ * </ul>
+ *
+ * <br><br>
  * <h3>Keyboard Handling</h3>
  *
  * The user can use the following keyboard shortcuts to toggle the checked state of the <code>ui5-checkbox</code>.
@@ -81,8 +88,17 @@ let activeCb: CheckBox;
  * @tagname ui5-checkbox
  * @public
  */
-@customElement("ui5-checkbox")
-@languageAware
+@customElement({
+	tag: "ui5-checkbox",
+	languageAware: true,
+	renderer: litRender,
+	template: CheckBoxTemplate,
+	styles: checkboxCss,
+	dependencies: [
+		Label,
+		Icon,
+	],
+})
 /**
  * Fired when the component checked state changes.
  *
@@ -131,7 +147,7 @@ class CheckBox extends UI5Element implements IFormElement {
 	/**
 	 * Defines whether the component is read-only.
 	 * <br><br>
-	 * <b>Note:</b> A red-only component is not editable,
+	 * <b>Note:</b> A read-only component is not editable,
 	 * but still provides visual feedback upon user interaction.
 	 *
 	 * @type {boolean}
@@ -282,18 +298,6 @@ class CheckBox extends UI5Element implements IFormElement {
 	static i18nBundle: I18nBundle;
 	_deactivate: () => void;
 
-	static get render() {
-		return litRender;
-	}
-
-	static get template() {
-		return CheckBoxTemplate;
-	}
-
-	static get styles() {
-		return checkboxCss;
-	}
-
 	constructor() {
 		super();
 
@@ -368,6 +372,10 @@ class CheckBox extends UI5Element implements IFormElement {
 
 	toggle() {
 		if (this.canToggle()) {
+			const lastState = {
+				checked: this.checked,
+				indeterminate: this.indeterminate,
+			};
 			if (this.indeterminate) {
 				this.indeterminate = false;
 				this.checked = true;
@@ -375,9 +383,14 @@ class CheckBox extends UI5Element implements IFormElement {
 				this.checked = !this.checked;
 			}
 
-			this.fireEvent("change");
+			const changePrevented = !this.fireEvent("change", null, true);
 			// Angular two way data binding
-			this.fireEvent("value-changed");
+			const valueChagnePrevented = !this.fireEvent("value-changed", null, true);
+
+			if (changePrevented || valueChagnePrevented) {
+				this.checked = lastState.checked;
+				this.indeterminate = lastState.indeterminate;
+			}
 		}
 		return this;
 	}
@@ -388,9 +401,9 @@ class CheckBox extends UI5Element implements IFormElement {
 
 	valueStateTextMappings() {
 		return {
-			"Error": CheckBox.i18nBundle.getText(VALUE_STATE_ERROR as I18nText),
-			"Warning": CheckBox.i18nBundle.getText(VALUE_STATE_WARNING as I18nText),
-			"Success": CheckBox.i18nBundle.getText(VALUE_STATE_SUCCESS as I18nText),
+			"Error": CheckBox.i18nBundle.getText(VALUE_STATE_ERROR),
+			"Warning": CheckBox.i18nBundle.getText(VALUE_STATE_WARNING),
+			"Success": CheckBox.i18nBundle.getText(VALUE_STATE_SUCCESS),
 		};
 	}
 
@@ -447,13 +460,6 @@ class CheckBox extends UI5Element implements IFormElement {
 
 	get isCompletelyChecked() {
 		return this.checked && !this.indeterminate;
-	}
-
-	static get dependencies() {
-		return [
-			Label,
-			Icon,
-		];
 	}
 
 	static async onDefine() {

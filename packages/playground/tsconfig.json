@@ -1,0 +1,18 @@
+{
+    "include": ["_stories/**/*", ".storybook/**/*", "global.d.ts", "build-scripts-storybook/**/*"],
+    "compilerOptions": {
+        "target": "ES2021",
+        // Generate d.ts files
+        "declaration": true,
+        "outDir": "dist",
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "inlineSources": true,
+        "strict": true,
+        "module": "node16",
+      	"moduleResolution": "node16",
+    		"resolveJsonModule": true,
+        "esModuleInterop": true,
+        "jsx": "react-jsx",
+    }
+}

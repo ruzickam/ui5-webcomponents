@@ -1,6 +1,5 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import languageAware from "@ui5/webcomponents-base/dist/decorators/languageAware.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
@@ -8,11 +7,12 @@ import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import { isSpace, isEnter } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AriaLabelHelper.js";
 import { getFeature } from "@ui5/webcomponents-base/dist/FeaturesRegistry.js";
-import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { PassiveEventListenerObject } from "@ui5/webcomponents-base/dist/types.js";
+import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { markEvent } from "@ui5/webcomponents-base/dist/MarkedEvents.js";
+import { getIconAccessibleName } from "@ui5/webcomponents-base/dist/asset-registries/Icons.js";
 
 import {
 	isPhone,
@@ -27,7 +27,6 @@ import ButtonDesign from "./types/ButtonDesign.js";
 import ButtonTemplate from "./generated/templates/ButtonTemplate.lit.js";
 import Icon from "./Icon.js";
 
-// @ts-ignore
 import { BUTTON_ARIA_TYPE_ACCEPT, BUTTON_ARIA_TYPE_REJECT, BUTTON_ARIA_TYPE_EMPHASIZED } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -81,8 +80,14 @@ let activeButton: Button | null = null;
  * @implements sap.ui.webc.main.IButton
  * @public
  */
-@customElement("ui5-button")
-@languageAware
+@customElement({
+	tag: "ui5-button",
+	languageAware: true,
+	renderer: litRender,
+	template: ButtonTemplate,
+	styles: buttonCss,
+	dependencies: [Icon],
+})
 /**
  * Fired when the component is activated either with a
  * mouse/tap or by using the Enter or Space key.
@@ -138,7 +143,7 @@ class Button extends UI5Element implements IFormElement {
 	 * <br><br>
 	 * Example:
 	 *
-	 * See all the available icons within the <ui5-link target="_blank" href="https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html" class="api-table-content-cell-link">Icon Explorer</ui5-link>.
+	 * See all the available icons within the <ui5-link target="_blank" href="https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html">Icon Explorer</ui5-link>.
 	 *
 	 * @type {string}
 	 * @name sap.ui.webc.main.Button.prototype.icon
@@ -241,7 +246,7 @@ class Button extends UI5Element implements IFormElement {
 	 * @since 1.2.0
 	 */
 	@property({ type: Object })
-	accessibilityAttributes!: object;
+	accessibilityAttributes!: { expanded: "true" | "false", hasPopup: "Dialog" | "Grid" | "ListBox" | "Menu" | "Tree", controls: string};
 
 	/**
 	 * Used to switch the active state (pressed or not) of the component.
@@ -278,6 +283,13 @@ class Button extends UI5Element implements IFormElement {
 	@property({ type: Boolean })
 	nonInteractive!: boolean;
 
+	/**
+	 * The current title of the button, either the tooltip property or the icons tooltip. The tooltip property with higher prio.
+	 * @private
+	 */
+	@property({ noAttribute: true })
+	buttonTitle?: string;
+
 	@property({ type: Object })
 	_iconSettings!: object;
 
@@ -311,22 +323,6 @@ class Button extends UI5Element implements IFormElement {
 	_deactivate: () => void;
 
 	_ontouchstart: PassiveEventListenerObject;
-
-	static get styles() {
-		return buttonCss;
-	}
-
-	static get render() {
-		return litRender;
-	}
-
-	static get template() {
-		return ButtonTemplate;
-	}
-
-	static get dependencies() {
-		return [Icon];
-	}
 
 	static i18nBundle: I18nBundle;
 
@@ -365,7 +361,7 @@ class Button extends UI5Element implements IFormElement {
 		this._isTouch = (isPhone() || isTablet()) && !isCombi();
 	}
 
-	onBeforeRendering() {
+	async onBeforeRendering() {
 		const formSupport = getFeature<typeof FormSupport>("FormSupport");
 		if (this.submits && !formSupport) {
 			console.warn(`In order for the "submits" property to have effect, you should also: import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js";`); // eslint-disable-line
@@ -373,6 +369,8 @@ class Button extends UI5Element implements IFormElement {
 
 		this.iconOnly = this.isIconOnly;
 		this.hasIcon = !!this.icon;
+
+		this.buttonTitle = this.tooltip || await getIconAccessibleName(this.icon);
 	}
 
 	_onclick(e: MouseEvent) {
@@ -456,7 +454,7 @@ class Button extends UI5Element implements IFormElement {
 			return "";
 		}
 
-		return this.showIconTooltip ? "img" : "presentation";
+		return "presentation";
 	}
 
 	get isIconOnly() {
@@ -465,9 +463,9 @@ class Button extends UI5Element implements IFormElement {
 
 	static typeTextMappings(): Record<string, I18nText> {
 		return {
-			"Positive": BUTTON_ARIA_TYPE_ACCEPT as I18nText,
-			"Negative": BUTTON_ARIA_TYPE_REJECT as I18nText,
-			"Emphasized": BUTTON_ARIA_TYPE_EMPHASIZED as I18nText,
+			"Positive": BUTTON_ARIA_TYPE_ACCEPT,
+			"Negative": BUTTON_ARIA_TYPE_REJECT,
+			"Emphasized": BUTTON_ARIA_TYPE_EMPHASIZED,
 		};
 	}
 

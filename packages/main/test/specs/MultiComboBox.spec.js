@@ -1,4 +1,4 @@
-const assert = require("chai").assert;
+import { assert } from "chai";
 
 describe("MultiComboBox general interaction", () => {
 	before(async () => {
@@ -95,12 +95,12 @@ describe("MultiComboBox general interaction", () => {
 		it("Checks if tokenizer is expanded when adding items dynamically", async () => {
 			await browser.url(`test/pages/MultiComboBox.html`);
 			await browser.setWindowSize(1920, 1080);
-	
+
 			const btn = await $("#add");
 			const mcb = await $("#mcb-dynamic-selection");
-	
+
 			await btn.click();
-	
+
 			const inlinedTokens = await mcb.shadow$$("ui5-token:not([overflows])");
 
 			assert.ok(inlinedTokens.length > 0, "Token is displayed");
@@ -1178,6 +1178,24 @@ describe("MultiComboBox general interaction", () => {
 			assert.equal(await mcb2.getProperty("value"), "Condensed", "Token is pasted into the second control");
 		});
 
+		it ("should not be able to paste tokenwith CTRL+V in read only multi combo box", async () => {
+			await browser.url(`test/pages/MultiComboBox.html`);
+
+			const mcb = await browser.$("#multi1");
+			const mcb2 = await browser.$("#readonly-value-state-mcb");
+			const input = await mcb2.shadow$("input");
+			const tokens = await mcb.shadow$$(".ui5-multi-combobox-token");
+
+			await tokens[1].click();
+			await tokens[1].keys(["Control", "c"]);
+			await input.click();
+			await input.keys(["Control", "v"]);
+
+			const mcb2Tokens = await mcb2.shadow$$(".ui5-multi-combobox-token");
+			assert.equal(await mcb2.getProperty("value"), "", "Token is not pasted into the second control");
+			assert.equal(mcb2Tokens.length, 0, "No token was created.");
+		});
+
 		it ("should cut a token with CTRL+X and paste it with CTRL+V", async () => {
 			await browser.url(`test/pages/MultiComboBox.html`);
 
@@ -1234,7 +1252,7 @@ describe("MultiComboBox general interaction", () => {
 			assert.equal(await mcb2.getProperty("value"), "Condensed", "Token is pasted into the second control");
 		});
 
-		it ("should select а token with CTRL+SPACE", async () => {
+		it ("should select a token with CTRL+SPACE", async () => {
 			await browser.url(`test/pages/MultiComboBox.html`);
 
 			const mcb = await browser.$("#mcb-error");
@@ -1349,6 +1367,24 @@ describe("MultiComboBox general interaction", () => {
 
 			assert.equal(await listItem.getProperty("focused"), true, "The second item should be focused");
 		});
+
+		it ("Backspace deletes token and forwards the focus to the last token without collapsing the tokenizer", async () => {
+			const mcb = await $("#n-more-many-items");
+			const inner = await mcb.shadow$("input");
+			let tokens = await mcb.shadow$$(".ui5-multi-combobox-token");
+
+			await inner.click();
+
+			assert.strictEqual(tokens.length, 7, "7 Tokens are placed in the MCB");
+
+			await inner.keys("Backspace");
+			await inner.keys("Backspace");
+
+			tokens = await mcb.shadow$$(".ui5-multi-combobox-token");
+
+			assert.strictEqual(tokens.length, 6, "6 Tokens are placed in the MCB");
+			assert.ok(await tokens[tokens.length - 1].getProperty("focused"), "Last Token is focused");
+		});
 	});
 
 	describe("General", () => {
@@ -1450,8 +1486,8 @@ describe("MultiComboBox general interaction", () => {
 			const innerInput = await mcb.shadow$("input");
 			const invisibleText = await mcb.shadow$(".ui5-hidden-text");
 			let tokens = await mcb.shadow$$(".ui5-multi-combobox-token");
-			const tokensCountITextId = `${await mcb.getProperty("_id")}-hiddenText-nMore`;
-			const valuestateITextId = `${await mcb.getProperty("_id")}-valueStateDesc`;
+			const tokensCountITextId = `ui5-multi-combobox-hiddenText-nMore`;
+			const valuestateITextId = `ui5-multi-combobox-valueStateDesc`;
 			const ariaDescribedBy = `${tokensCountITextId} ${valuestateITextId}`;
 
 			assert.strictEqual(tokens.length, 3, "should have three tokens");
@@ -1533,7 +1569,7 @@ describe("MultiComboBox general interaction", () => {
 
 			await mCbWarning.click();
 
-			let ariaHiddenText = await mCbWarning.shadow$(`#${staticAreaItemClassName}-valueStateDesc`).getHTML(false);
+			let ariaHiddenText = await mCbWarning.shadow$(`#ui5-multi-combobox-valueStateDesc`).getHTML(false);
 			let valueStateText = await popover.$("div").getHTML(false);
 
 			assert.strictEqual(ariaHiddenText.includes("Value State"), true, "Hidden screen reader text is correct");
@@ -1545,7 +1581,7 @@ describe("MultiComboBox general interaction", () => {
 			staticAreaItemClassName = await browser.getStaticAreaItemClassName("#mcb-error");
 			popover = await browser.$(`.${staticAreaItemClassName}`).shadow$("ui5-popover");
 
-			ariaHiddenText = await mCbError.shadow$(`#${staticAreaItemClassName}-valueStateDesc`).getHTML(false);
+			ariaHiddenText = await mCbError.shadow$(`#ui5-multi-combobox-valueStateDesc`).getHTML(false);
 			valueStateText = await popover.$("div").getHTML(false);
 
 			assert.strictEqual(ariaHiddenText.includes("Value State"), true, "Hidden screen reader text is correct");
@@ -1555,7 +1591,7 @@ describe("MultiComboBox general interaction", () => {
 			await mCbSuccess.click();
 
 			staticAreaItemClassName = await browser.getStaticAreaItemClassName("#mcb-success");
-			ariaHiddenText = await mCbSuccess.shadow$(`#${staticAreaItemClassName}-valueStateDesc`).getHTML(false);
+			ariaHiddenText = await mCbSuccess.shadow$(`#ui5-multi-combobox-valueStateDesc`).getHTML(false);
 
 			assert.strictEqual(ariaHiddenText.includes("Value State"), true, "Hidden screen reader text is correct");
 		});
@@ -1569,7 +1605,7 @@ describe("MultiComboBox general interaction", () => {
 
 			const popoverHeader = await browser.$(`.${staticAreaItemClassName}`).shadow$("ui5-responsive-popover .ui5-valuestatemessage-header");
 			const valueStateText = await popoverHeader.$("div").getHTML(false);
-			const ariaHiddenText = await mCbInformation.shadow$(`#${staticAreaItemClassName}-valueStateDesc`).getHTML(false);
+			const ariaHiddenText = await mCbInformation.shadow$(`#ui5-multi-combobox-valueStateDesc`).getHTML(false);
 
 			assert.strictEqual(ariaHiddenText.includes("Value State"), true, "Hidden screen reader text is correct");
 			assert.strictEqual(valueStateText.includes("Extra long text used as an information message"), true, "Displayed value state message text is correct");

@@ -3,8 +3,6 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import languageAware from "@ui5/webcomponents-base/dist/decorators/languageAware.js";
-import fastNavigation from "@ui5/webcomponents-base/dist/decorators/fastNavigation.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import slideDown from "@ui5/webcomponents-base/dist/animations/slideDown.js";
 import slideUp from "@ui5/webcomponents-base/dist/animations/slideUp.js";
@@ -13,7 +11,6 @@ import AnimationMode from "@ui5/webcomponents-base/dist/types/AnimationMode.js";
 import { getAnimationMode } from "@ui5/webcomponents-base/dist/config/AnimationMode.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import "@ui5/webcomponents-icons/dist/slim-arrow-right.js";
 import Button from "./Button.js";
 import Icon from "./Icon.js";
@@ -21,7 +18,6 @@ import TitleLevel from "./types/TitleLevel.js";
 import PanelAccessibleRole from "./types/PanelAccessibleRole.js";
 import PanelTemplate from "./generated/templates/PanelTemplate.lit.js";
 
-// @ts-ignore
 import { PANEL_ICON } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -96,9 +92,15 @@ import panelCss from "./generated/themes/Panel.css.js";
  * @tagname ui5-panel
  * @public
  */
-@customElement("ui5-panel")
-@fastNavigation
-@languageAware
+@customElement({
+	tag: "ui5-panel",
+	fastNavigation: true,
+	languageAware: true,
+	renderer: litRender,
+	template: PanelTemplate,
+	styles: panelCss,
+	dependencies: [Button, Icon],
+})
 /**
  * Fired when the component is expanded/collapsed by user interaction.
  *
@@ -242,18 +244,6 @@ class Panel extends UI5Element {
 
 	static i18nBundle: I18nBundle;
 
-	static get render() {
-		return litRender;
-	}
-
-	static get template() {
-		return PanelTemplate;
-	}
-
-	static get styles() {
-		return panelCss;
-	}
-
 	onBeforeRendering() {
 		// If the animation is running, it will set the content expanded state at the end
 		if (!this._animationRunning) {
@@ -362,7 +352,7 @@ class Panel extends UI5Element {
 	}
 
 	get toggleButtonTitle() {
-		return Panel.i18nBundle.getText(PANEL_ICON as I18nText);
+		return Panel.i18nBundle.getText(PANEL_ICON);
 	}
 
 	get expanded() {
@@ -435,10 +425,6 @@ class Panel extends UI5Element {
 				display: this._contentExpanded ? "block" : "none",
 			},
 		};
-	}
-
-	static get dependencies() {
-		return [Button, Icon];
 	}
 
 	static async onDefine() {

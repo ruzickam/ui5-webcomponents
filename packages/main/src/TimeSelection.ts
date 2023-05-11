@@ -2,13 +2,11 @@ import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
-import languageAware from "@ui5/webcomponents-base/dist/decorators/languageAware.js";
 import Integer from "@ui5/webcomponents-base/dist/types/Integer.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
 import DateFormat from "@ui5/webcomponents-localization/dist/DateFormat.js";
 import getCachedLocaleDataInstance from "@ui5/webcomponents-localization/dist/getCachedLocaleDataInstance.js";
@@ -34,7 +32,6 @@ import {
 	TIMEPICKER_HOURS_LABEL,
 	TIMEPICKER_MINUTES_LABEL,
 	TIMEPICKER_SECONDS_LABEL,
-	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -62,8 +59,14 @@ type TimeSelectionSliderChangeEventDetail = {
  * @private
  * @since 1.0.0-rc.12
  */
-@customElement("ui5-time-selection")
-@languageAware
+@customElement({
+	tag: "ui5-time-selection",
+	languageAware: true,
+	renderer: litRender,
+	styles: timeSelectionCss,
+	template: timeSelectionTemplate,
+	dependencies: [WheelSlider],
+})
 
 /**
  * Fired when the value changes due to user interaction with the sliders
@@ -181,22 +184,6 @@ class TimeSelection extends UI5Element {
 	_calendarType!: CalendarType;
 
 	static i18nBundle: I18nBundle;
-
-	static get render() {
-		return litRender;
-	}
-
-	static get styles() {
-		return timeSelectionCss;
-	}
-
-	static get template() {
-		return timeSelectionTemplate;
-	}
-
-	static get dependencies() {
-		return [WheelSlider];
-	}
 
 	static async onDefine() {
 		[TimeSelection.i18nBundle] = await Promise.all([
@@ -489,15 +476,15 @@ class TimeSelection extends UI5Element {
 	}
 
 	get hoursSliderTitle() {
-		return TimeSelection.i18nBundle.getText(TIMEPICKER_HOURS_LABEL as I18nText);
+		return TimeSelection.i18nBundle.getText(TIMEPICKER_HOURS_LABEL);
 	}
 
 	get minutesSliderTitle() {
-		return TimeSelection.i18nBundle.getText(TIMEPICKER_MINUTES_LABEL as I18nText);
+		return TimeSelection.i18nBundle.getText(TIMEPICKER_MINUTES_LABEL);
 	}
 
 	get secondsSliderTitle() {
-		return TimeSelection.i18nBundle.getText(TIMEPICKER_SECONDS_LABEL as I18nText);
+		return TimeSelection.i18nBundle.getText(TIMEPICKER_SECONDS_LABEL);
 	}
 
 	get periodSliderTitle() {

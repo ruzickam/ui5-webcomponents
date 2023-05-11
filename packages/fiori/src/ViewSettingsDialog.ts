@@ -4,7 +4,6 @@ import customElement from "@ui5/webcomponents-base/dist/decorators/customElement
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
@@ -16,9 +15,7 @@ import List from "@ui5/webcomponents/dist/List.js";
 import type { ClickEventDetail } from "@ui5/webcomponents/dist/List.js";
 import StandardListItem from "@ui5/webcomponents/dist/StandardListItem.js";
 import Title from "@ui5/webcomponents/dist/Title.js";
-// @ts-ignore
 import SegmentedButton from "@ui5/webcomponents/dist/SegmentedButton.js";
-// @ts-ignore
 import SegmentedButtonItem from "@ui5/webcomponents/dist/SegmentedButtonItem.js";
 
 import Bar from "./Bar.js";
@@ -39,7 +36,6 @@ import {
 	VSD_ORDER_ASCENDING,
 	VSD_ORDER_DESCENDING,
 	VSD_FILTER_BY,
-// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -102,11 +98,28 @@ type VSDInternalSettings = {
  * @alias sap.ui.webc.fiori.ViewSettingsDialog
  * @extends sap.ui.webc.base.UI5Element
  * @tagname ui5-view-settings-dialog
- * @appenddocs SortItem FilterItem FilterItemOption
+ * @appenddocs sap.ui.webc.fiori.SortItem sap.ui.webc.fiori.FilterItem sap.ui.webc.fiori.FilterItemOption
  * @since 1.0.0-rc.16
  * @public
  */
-@customElement("ui5-view-settings-dialog")
+@customElement({
+	tag: "ui5-view-settings-dialog",
+	renderer: litRender,
+	styles: viewSettingsDialogCSS,
+	template: ViewSettingsDialogTemplate,
+	dependencies: [
+		Bar,
+		Button,
+		Title,
+		Dialog,
+		Label,
+		List,
+		StandardListItem,
+		GroupHeaderListItem,
+		SegmentedButton,
+		SegmentedButtonItem,
+	],
+})
 
 /**
  * Fired when confirmation button is activated.
@@ -286,33 +299,6 @@ class ViewSettingsDialog extends UI5Element {
 		});
 	}
 
-	static get render() {
-		return litRender;
-	}
-
-	static get dependencies() { // remove type casting after refactoring these
-		return [
-			Bar,
-			Button,
-			Title,
-			Dialog,
-			Label,
-			List,
-			StandardListItem,
-			GroupHeaderListItem,
-			SegmentedButton as typeof UI5Element,
-			SegmentedButtonItem as typeof UI5Element,
-		];
-	}
-
-	static get template() {
-		return ViewSettingsDialogTemplate;
-	}
-
-	static get styles() {
-		return viewSettingsDialogCSS;
-	}
-
 	static async onDefine() {
 		ViewSettingsDialog.i18nBundle = await getI18nBundle("@ui5/webcomponents-fiori");
 	}
@@ -339,43 +325,43 @@ class ViewSettingsDialog extends UI5Element {
 
 	get _filterByTitle() {
 		const selectedFilterText = this._selectedFilter ? this._selectedFilter.text : "";
-		return `${ViewSettingsDialog.i18nBundle.getText(VSD_FILTER_BY as I18nText)}: ${selectedFilterText}`;
+		return `${ViewSettingsDialog.i18nBundle.getText(VSD_FILTER_BY)}: ${selectedFilterText}`;
 	}
 
 	get _dialogTitle() {
-		return ViewSettingsDialog.i18nBundle.getText(VSD_DIALOG_TITLE_SORT as I18nText);
+		return ViewSettingsDialog.i18nBundle.getText(VSD_DIALOG_TITLE_SORT);
 	}
 
 	get _okButtonLabel() {
-		return ViewSettingsDialog.i18nBundle.getText(VSD_SUBMIT_BUTTON as I18nText);
+		return ViewSettingsDialog.i18nBundle.getText(VSD_SUBMIT_BUTTON);
 	}
 
 	get _cancelButtonLabel() {
-		return ViewSettingsDialog.i18nBundle.getText(VSD_CANCEL_BUTTON as I18nText);
+		return ViewSettingsDialog.i18nBundle.getText(VSD_CANCEL_BUTTON);
 	}
 
 	get _resetButtonLabel() {
-		return ViewSettingsDialog.i18nBundle.getText(VSD_RESET_BUTTON as I18nText);
+		return ViewSettingsDialog.i18nBundle.getText(VSD_RESET_BUTTON);
 	}
 
 	get _ascendingLabel() {
-		return ViewSettingsDialog.i18nBundle.getText(VSD_ORDER_ASCENDING as I18nText);
+		return ViewSettingsDialog.i18nBundle.getText(VSD_ORDER_ASCENDING);
 	}
 
 	get _descendingLabel() {
-		return ViewSettingsDialog.i18nBundle.getText(VSD_ORDER_DESCENDING as I18nText);
+		return ViewSettingsDialog.i18nBundle.getText(VSD_ORDER_DESCENDING);
 	}
 
 	get _sortOrderLabel() {
-		return ViewSettingsDialog.i18nBundle.getText(VSD_SORT_ORDER as I18nText);
+		return ViewSettingsDialog.i18nBundle.getText(VSD_SORT_ORDER);
 	}
 
 	get _filterByLabel() {
-		return ViewSettingsDialog.i18nBundle.getText(VSD_FILTER_BY as I18nText);
+		return ViewSettingsDialog.i18nBundle.getText(VSD_FILTER_BY);
 	}
 
 	get _sortByLabel() {
-		return ViewSettingsDialog.i18nBundle.getText(VSD_SORT_BY as I18nText);
+		return ViewSettingsDialog.i18nBundle.getText(VSD_SORT_BY);
 	}
 
 	get _isPhone() {

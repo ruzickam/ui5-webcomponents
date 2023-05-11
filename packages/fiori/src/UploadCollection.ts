@@ -1,18 +1,18 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import languageAware from "@ui5/webcomponents-base/dist/decorators/languageAware.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import Icon from "@ui5/webcomponents/dist/Icon.js";
 import Label from "@ui5/webcomponents/dist/Label.js";
 import List from "@ui5/webcomponents/dist/List.js";
 import ListMode from "@ui5/webcomponents/dist/types/ListMode.js";
 import Title from "@ui5/webcomponents/dist/Title.js";
+import IllustratedMessage from "./IllustratedMessage.js";
+import "./illustrations/sapIllus-Scene-Tent.js";
 import "@ui5/webcomponents-icons/dist/upload-to-cloud.js";
 import "@ui5/webcomponents-icons/dist/document.js";
 import {
@@ -21,13 +21,13 @@ import {
 	UPLOADCOLLECTION_DRAG_FILE_INDICATOR,
 	UPLOADCOLLECTION_DROP_FILE_INDICATOR,
 	UPLOADCOLLECTION_ARIA_ROLE_DESCRIPTION,
-// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 import {
 	attachBodyDnDHandler,
 	detachBodyDnDHandler,
 	draggingFiles,
 } from "./upload-utils/UploadCollectionBodyDnD.js";
+import type UploadCollectionItem from "./UploadCollectionItem.js";
 import type { DnDEventListener, DnDEventListenerParam } from "./upload-utils/UploadCollectionBodyDnD.js";
 import UploadCollectionDnDOverlayMode from "./types/UploadCollectionDnDMode.js";
 
@@ -38,11 +38,11 @@ import UploadCollectionTemplate from "./generated/templates/UploadCollectionTemp
 import UploadCollectionCss from "./generated/themes/UploadCollection.css.js";
 
 type SelectionChangeEventDetail = {
-	selectedItems: Array<HTMLElement>, // Note: HTMLElement can be replaced with UploadCollectionItem (when migrated to TS) to be even more presice.
+	selectedItems: Array<UploadCollectionItem>,
 };
 
 type ItemDeleteEventDetail = {
-	item: HTMLElement, // Note: HTMLElement can be replaced with UploadCollectionItem (when migrated to TS) to be even more presice.
+	item: UploadCollectionItem,
 };
 
 /**
@@ -62,12 +62,24 @@ type ItemDeleteEventDetail = {
  * @alias sap.ui.webc.fiori.UploadCollection
  * @extends sap.ui.webc.base.UI5Element
  * @tagname ui5-upload-collection
- * @appenddocs UploadCollectionItem
+ * @appenddocs sap.ui.webc.fiori.UploadCollectionItem
  * @public
  * @since 1.0.0-rc.7
  */
-@customElement("ui5-upload-collection")
-@languageAware
+@customElement({
+	tag: "ui5-upload-collection",
+	languageAware: true,
+	renderer: litRender,
+	styles: UploadCollectionCss,
+	template: UploadCollectionTemplate,
+	dependencies: [
+		Icon,
+		Label,
+		List,
+		Title,
+		IllustratedMessage,
+	],
+})
 /**
  * Fired when an element is dropped inside the drag and drop overlay.
  * <br><br>
@@ -199,7 +211,7 @@ class UploadCollection extends UI5Element {
 	 * @public
 	 */
 	@slot({ type: HTMLElement, "default": true })
-	items!: Array<HTMLElement>;
+	items!: Array<UploadCollectionItem>;
 
 	/**
 	 * Defines the <code>ui5-upload-collection</code> header.
@@ -219,27 +231,6 @@ class UploadCollection extends UI5Element {
 	_bodyDnDHandler: DnDEventListener;
 
 	static i18nBundle: I18nBundle;
-
-	static get render() {
-		return litRender;
-	}
-
-	static get styles() {
-		return UploadCollectionCss;
-	}
-
-	static get template() {
-		return UploadCollectionTemplate;
-	}
-
-	static get dependencies() {
-		return [
-			Icon,
-			Label,
-			List,
-			Title,
-		];
-	}
 
 	static async onDefine() {
 		UploadCollection.i18nBundle = await getI18nBundle("@ui5/webcomponents-fiori");
@@ -355,23 +346,23 @@ class UploadCollection extends UI5Element {
 	}
 
 	get _noDataText() {
-		return this.noDataText || UploadCollection.i18nBundle.getText(UPLOADCOLLECTION_NO_DATA_TEXT as I18nText);
+		return this.noDataText || UploadCollection.i18nBundle.getText(UPLOADCOLLECTION_NO_DATA_TEXT);
 	}
 
 	get _noDataDescription() {
-		return this.noDataDescription || UploadCollection.i18nBundle.getText(UPLOADCOLLECTION_NO_DATA_DESCRIPTION as I18nText);
+		return this.noDataDescription || UploadCollection.i18nBundle.getText(UPLOADCOLLECTION_NO_DATA_DESCRIPTION);
 	}
 
 	get _roleDescription() {
-		return UploadCollection.i18nBundle.getText(UPLOADCOLLECTION_ARIA_ROLE_DESCRIPTION as I18nText);
+		return UploadCollection.i18nBundle.getText(UPLOADCOLLECTION_ARIA_ROLE_DESCRIPTION);
 	}
 
 	get _dndOverlayText() {
 		if (this._dndOverlayMode === UploadCollectionDnDOverlayMode.Drag) {
-			return UploadCollection.i18nBundle.getText(UPLOADCOLLECTION_DRAG_FILE_INDICATOR as I18nText);
+			return UploadCollection.i18nBundle.getText(UPLOADCOLLECTION_DRAG_FILE_INDICATOR);
 		}
 
-		return UploadCollection.i18nBundle.getText(UPLOADCOLLECTION_DROP_FILE_INDICATOR as I18nText);
+		return UploadCollection.i18nBundle.getText(UPLOADCOLLECTION_DROP_FILE_INDICATOR);
 	}
 }
 

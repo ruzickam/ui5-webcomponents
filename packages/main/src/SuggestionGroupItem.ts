@@ -12,12 +12,16 @@ import GroupHeaderListItem from "./GroupHeaderListItem.js";
  * @author SAP SE
  * @alias sap.ui.webc.main.SuggestionGroupItem
  * @extends sap.ui.webc.base.UI5Element
+ * @abstract
  * @tagname ui5-suggestion-group-item
  * @implements sap.ui.webc.main.IInputSuggestionItem
  * @public
  * @since 1.0.0-rc.15
  */
-@customElement("ui5-suggestion-group-item")
+@customElement({
+	tag: "ui5-suggestion-group-item",
+	dependencies: [GroupHeaderListItem],
+})
 class SuggestionGroupItem extends UI5Element {
 	/**
 	 * Defines the text of the <code>ui5-suggestion-group-item</code>.
@@ -29,12 +33,6 @@ class SuggestionGroupItem extends UI5Element {
 	 */
 	@property()
 	text!: string;
-
-	static get dependencies() {
-		return [
-			GroupHeaderListItem,
-		];
-	}
 
 	/**
 	 * Indicates the "grouping" nature of the component

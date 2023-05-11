@@ -1,12 +1,11 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
+import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import languageAware from "@ui5/webcomponents-base/dist/decorators/languageAware.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import getLocale from "@ui5/webcomponents-base/dist/locale/getLocale.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import "@ui5/webcomponents-localization/dist/features/calendar/Gregorian.js"; // default calendar for bundling
@@ -38,7 +37,6 @@ import type { TimeSelectionChangeEventDetail } from "./TimeSelection.js";
 import {
 	TIMEPICKER_SUBMIT_BUTTON,
 	TIMEPICKER_CANCEL_BUTTON,
-	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -56,24 +54,59 @@ import ResponsivePopoverCommonCss from "./generated/themes/ResponsivePopoverComm
  * @public
  * @since 1.0.0-rc.6
  */
-@languageAware
-
+@customElement({
+	languageAware: true,
+	renderer: litRender,
+	template: TimePickerTemplate,
+	styles: TimePickerCss,
+	staticAreaTemplate: TimePickerPopoverTemplate,
+	staticAreaStyles: [ResponsivePopoverCommonCss, TimePickerPopoverCss],
+	dependencies: [
+		Icon,
+		ResponsivePopover,
+		TimeSelection,
+		Input,
+		Button,
+	],
+})
 /**
  * Fired when the input operation has finished by clicking the "OK" button or
  * when the text in the input field has changed and the focus leaves the input field.
- *
- * @event sap.ui.webc.main.TimePickerBase#change
+*
+* @event sap.ui.webc.main.TimePickerBase#change
  * @public
- */
-@event("change")
+ * @param {string} value The submitted value.
+ * @param {boolean} valid Indicator if the value is in correct format pattern and in valid range.
+*/
+@event("change", {
+	detail: {
+		value: {
+			type: String,
+		},
+		valid: {
+			type: Boolean,
+		},
+	},
+})
 
 /**
  * Fired when the value of the <code>ui5-time-picker</code> is changed at each key stroke.
  *
  * @event sap.ui.webc.main.TimePickerBase#input
  * @public
- */
-@event("input")
+ * @param {string} value The current value.
+ * @param {boolean} valid Indicator if the value is in correct format pattern and in valid range.
+*/
+@event("input", {
+	detail: {
+		value: {
+			type: String,
+		},
+		valid: {
+			type: Boolean,
+		},
+	},
+})
 class TimePickerBase extends UI5Element {
 	/**
 	 * Defines a formatted time value.
@@ -154,41 +187,11 @@ class TimePickerBase extends UI5Element {
 
 	static i18nBundle: I18nBundle;
 
-	static get render() {
-		return litRender;
-	}
-
-	static get styles() {
-		return TimePickerCss;
-	}
-
-	static get staticAreaTemplate() {
-		return TimePickerPopoverTemplate;
-	}
-
-	static get template() {
-		return TimePickerTemplate;
-	}
-
-	static get dependencies() {
-		return [
-			Icon,
-			ResponsivePopover,
-			TimeSelection,
-			Input,
-			Button,
-		];
-	}
-
 	static async onDefine() {
 		[TimePickerBase.i18nBundle] = await Promise.all([
 			getI18nBundle("@ui5/webcomponents"),
 			fetchCldr(getLocale().getLanguage(), getLocale().getRegion(), getLocale().getScript()),
 		]);
-	}
-
-	static get staticAreaStyles() {
-		return [ResponsivePopoverCommonCss, TimePickerPopoverCss];
 	}
 
 	constructor() {
@@ -255,7 +258,7 @@ class TimePickerBase extends UI5Element {
 		}
 
 		if (!eventsNames.includes("input")) {
-			this.value = ""; // Do not remove! DurationPicker use case -> value is 05:10, user tries 05:12, after normalization value is changed back to 05:10 so no invalidation happens, but the input still shows 05:12. Thus we enforce invalidation with the ""
+			this.value = ""; // Do not remove! DurationPicker (an external component extending TimePickerBase) use case -> value is 05:10, user tries 05:12, after normalization value is changed back to 05:10 so no invalidation happens, but the input still shows 05:12. Thus we enforce invalidation with the ""
 			this.value = value;
 		}
 		this.tempValue = value; // if the picker is open, sync it
@@ -406,7 +409,7 @@ class TimePickerBase extends UI5Element {
 	/**
 	 * Formats a Java Script date object into a string representing a locale date and time
 	 * according to the <code>formatPattern</code> property of the TimePicker instance
-	 * @param {object} date A Java Script date object to be formatted as string
+	 * @param {Date} date A Java Script date object to be formatted as string
 	 * @public
 	 * @method
 	 * @name sap.ui.webc.main.TimePickerBase#formatValue
@@ -473,11 +476,11 @@ class TimePickerBase extends UI5Element {
 	}
 
 	get submitButtonLabel() {
-		return TimePickerBase.i18nBundle.getText(TIMEPICKER_SUBMIT_BUTTON as I18nText);
+		return TimePickerBase.i18nBundle.getText(TIMEPICKER_SUBMIT_BUTTON);
 	}
 
 	get cancelButtonLabel() {
-		return TimePickerBase.i18nBundle.getText(TIMEPICKER_CANCEL_BUTTON as I18nText);
+		return TimePickerBase.i18nBundle.getText(TIMEPICKER_CANCEL_BUTTON);
 	}
 
 	/**

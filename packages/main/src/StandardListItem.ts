@@ -5,7 +5,6 @@ import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import ListItem from "./ListItem.js";
 import type { IAccessibleListItem } from "./ListItem.js";
 import Icon from "./Icon.js";
-// @ts-ignore
 import Avatar from "./Avatar.js";
 import WrappingType from "./types/WrappingType.js";
 import StandardListItemTemplate from "./generated/templates/StandardListItemTemplate.lit.js";
@@ -38,7 +37,15 @@ import StandardListItemTemplate from "./generated/templates/StandardListItemTemp
  * @implements sap.ui.webc.main.IListItem
  * @public
  */
-@customElement("ui5-li")
+@customElement({
+	tag: "ui5-li",
+	template: StandardListItemTemplate,
+	dependencies: [
+		...ListItem.dependencies,
+		Icon,
+		Avatar,
+	],
+})
 class StandardListItem extends ListItem implements IAccessibleListItem {
 	/**
 	 * Defines the description displayed right under the item text, if such is present.
@@ -56,7 +63,7 @@ class StandardListItem extends ListItem implements IAccessibleListItem {
 	 * <br><br>
 	 * <b>Note:</b>
 	 * SAP-icons font provides numerous built-in icons. To find all the available icons, see the
-	 * <ui5-link target="_blank" href="https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html" class="api-table-content-cell-link">Icon Explorer</ui5-link>.
+	 * <ui5-link target="_blank" href="https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html">Icon Explorer</ui5-link>.
 	 *
 	 * @type {string}
 	 * @name sap.ui.webc.main.StandardListItem.prototype.icon
@@ -177,10 +184,6 @@ class StandardListItem extends ListItem implements IAccessibleListItem {
 	@slot()
 	imageContent!: Array<HTMLElement>;
 
-	static get template() {
-		return StandardListItemTemplate;
-	}
-
 	onBeforeRendering() {
 		super.onBeforeRendering();
 		this.hasTitle = !!this.textContent;
@@ -201,14 +204,6 @@ class StandardListItem extends ListItem implements IAccessibleListItem {
 
 	get hasImageContent(): boolean {
 		return !!this.imageContent.length;
-	}
-
-	static get dependencies() {
-		return [
-			...ListItem.dependencies,
-			Icon,
-			Avatar,
-		];
 	}
 }
 

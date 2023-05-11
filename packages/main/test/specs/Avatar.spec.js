@@ -1,5 +1,4 @@
-const assert = require("chai").assert;
-
+import { assert } from "chai";
 
 describe("Avatar", () => {
 	before(async () => {
@@ -40,6 +39,14 @@ describe("Avatar", () => {
 
 	it("tests rendering of initials", async () => {
 		const avatar = await browser.$("#myAvatar4");
+		const initials = await avatar.shadow$(".ui5-avatar-initials");
+
+		// initials are rendered
+		assert.ok(await initials.isExisting(), "initials are rendered");
+	});
+
+	it("tests rendering of accented characters", async () => {
+		const avatar = await browser.$("#myAvatar6");
 		const initials = await avatar.shadow$(".ui5-avatar-initials");
 
 		// initials are rendered

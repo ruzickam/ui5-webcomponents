@@ -19,7 +19,6 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ValueState from "@ui5/webcomponents-base/dist/types/ValueState.js";
 import { getEffectiveAriaLabelText } from "@ui5/webcomponents-base/dist/util/AriaLabelHelper.js";
 import { getFeature } from "@ui5/webcomponents-base/dist/FeaturesRegistry.js";
@@ -30,7 +29,6 @@ import { Timeout } from "@ui5/webcomponents-base/dist/types.js";
 import type FormSupport from "./features/InputElementsFormSupport.js";
 import type { IFormElement } from "./features/InputElementsFormSupport.js";
 import StepInputTemplate from "./generated/templates/StepInputTemplate.lit.js";
-// @ts-ignore
 import { STEPINPUT_DEC_ICON_TITLE, STEPINPUT_INC_ICON_TITLE } from "./generated/i18n/i18n-defaults.js";
 import "@ui5/webcomponents-icons/dist/less.js";
 import "@ui5/webcomponents-icons/dist/add.js";
@@ -95,7 +93,16 @@ const INITIAL_SPEED = 120; // milliseconds
  * @since 1.0.0-rc.13
  * @public
  */
-@customElement("ui5-step-input")
+@customElement({
+	tag: "ui5-step-input",
+	renderer: litRender,
+	styles: StepInputCss,
+	template: StepInputTemplate,
+	dependencies: [
+		Icon,
+		Input,
+	],
+})
 /**
  * Fired when the input operation has finished by pressing Enter or on focusout.
  *
@@ -330,25 +337,6 @@ class StepInput extends UI5Element implements IFormElement {
 
 	static i18nBundle: I18nBundle;
 
-	static get render() {
-		return litRender;
-	}
-
-	static get styles() {
-		return StepInputCss;
-	}
-
-	static get template() {
-		return StepInputTemplate;
-	}
-
-	static get dependencies() {
-		return [
-			Icon,
-			Input,
-		];
-	}
-
 	static async onDefine() {
 		StepInput.i18nBundle = await getI18nBundle("@ui5/webcomponents");
 	}
@@ -360,7 +348,7 @@ class StepInput extends UI5Element implements IFormElement {
 	// icons-related
 
 	get decIconTitle() {
-		return StepInput.i18nBundle.getText(STEPINPUT_DEC_ICON_TITLE as I18nText);
+		return StepInput.i18nBundle.getText(STEPINPUT_DEC_ICON_TITLE);
 	}
 
 	get decIconName() {
@@ -368,7 +356,7 @@ class StepInput extends UI5Element implements IFormElement {
 	}
 
 	get incIconTitle() {
-		return StepInput.i18nBundle.getText(STEPINPUT_INC_ICON_TITLE as I18nText);
+		return StepInput.i18nBundle.getText(STEPINPUT_INC_ICON_TITLE);
 	}
 
 	get incIconName() {
@@ -438,6 +426,9 @@ class StepInput extends UI5Element implements IFormElement {
 
 	_onInputFocusIn() {
 		this._inputFocused = true;
+		if (this.value !== this._previousValue) {
+			this._previousValue = this.value;
+		}
 	}
 
 	_onInputFocusOut() {

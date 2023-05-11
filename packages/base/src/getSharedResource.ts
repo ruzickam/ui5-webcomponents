@@ -1,10 +1,15 @@
 import getSingletonElementInstance from "./util/getSingletonElementInstance.js";
 
-const getSharedResourcesInstance = () => getSingletonElementInstance("ui5-shared-resources", document.head);
+const getSharedResourcesInstance = (): Record<string, unknown> | null => {
+	if (typeof document === "undefined") {
+		return null;
+	}
+	return getSingletonElementInstance("ui5-shared-resources") as unknown as Record<string, unknown>;
+};
 
 /**
  * Use this method to initialize/get resources that you would like to be shared among UI5 Web Components runtime instances.
- * The data will be accessed via a singleton "ui5-shared-resources" HTML element in the "head" element of the page.
+ * The data will be accessed via a singleton "ui5-shared-resources" HTML element in the "body" element of the page.
  *
  * @public
  * @param namespace Unique ID of the resource, may contain "." to denote hierarchy
@@ -14,6 +19,10 @@ const getSharedResourcesInstance = () => getSingletonElementInstance("ui5-shared
 const getSharedResource = <T>(namespace: string, initialValue: T): T => {
 	const parts = namespace.split(".");
 	let current = getSharedResourcesInstance() as Record<string, any>;
+
+	if (!current) {
+		return initialValue;
+	}
 
 	for (let i = 0; i < parts.length; i++) {
 		const part = parts[i];

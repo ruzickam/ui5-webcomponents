@@ -1,23 +1,19 @@
+import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import Integer from "@ui5/webcomponents-base/dist/types/Integer.js";
 import { getEventMark } from "@ui5/webcomponents-base/dist/MarkedEvents.js";
 import { isSpace, isEnter, isDelete } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { ComponentStylesData, PassiveEventListenerObject } from "@ui5/webcomponents-base/dist/types.js";
+import type { PassiveEventListenerObject } from "@ui5/webcomponents-base/dist/types.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
-import languageAware from "@ui5/webcomponents-base/dist/decorators/languageAware.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import type UI5Element from "@ui5/webcomponents-base/src/UI5Element.js";
 import "@ui5/webcomponents-icons/dist/decline.js";
 import "@ui5/webcomponents-icons/dist/edit.js";
 import ListItemType from "./types/ListItemType.js";
 import ListMode from "./types/ListMode.js";
 import ListItemBase from "./ListItemBase.js";
-// @ts-ignore
 import RadioButton from "./RadioButton.js";
-// @ts-ignore
 import CheckBox from "./CheckBox.js";
 import Button from "./Button.js";
 import {
@@ -26,7 +22,6 @@ import {
 	ARIA_LABEL_LIST_ITEM_RADIO_BUTTON,
 	LIST_ITEM_SELECTED,
 	LIST_ITEM_NOT_SELECTED,
-	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -54,6 +49,22 @@ type PressEventDetail = {
 	key: string,
 }
 
+type AccInfo = {
+	role: string;
+	ariaExpanded?: boolean;
+	ariaLevel?: number;
+	ariaLabel: string;
+	ariaLabelRadioButton: string;
+	ariaSelectedText?: string;
+	ariaHaspopup?: HasPopup;
+	posinset?: number;
+	setsize?: number;
+	ariaSelected?: boolean;
+	ariaChecked?: boolean;
+	listItemAriaLabel?: string;
+	ariaOwns?: string;
+}
+
 /**
  * @class
  * A class to serve as a base
@@ -65,7 +76,15 @@ type PressEventDetail = {
  * @extends sap.ui.webc.main.ListItemBase
  * @public
  */
-@languageAware
+@customElement({
+	languageAware: true,
+	styles: [ListItemBase.styles, styles],
+	dependencies: [
+		Button,
+		RadioButton,
+		CheckBox,
+	],
+})
 /**
  * Fired when the user clicks on the detail button when type is <code>Detail</code>.
  *
@@ -212,20 +231,12 @@ abstract class ListItem extends ListItemBase {
 	deactivateByKey: (e: KeyboardEvent) => void;
 	deactivate: () => void;
 	_ontouchstart: PassiveEventListenerObject;
+	// used in template, implemented in TreeItemBase
+	accessibleName?: string;
+	// used in ListItem template but implemented in TreeItemBase
+	indeterminate?: boolean;
 
 	static i18nBundle: I18nBundle;
-
-	static get styles(): ComponentStylesData {
-		return [ListItemBase.styles, styles];
-	}
-
-	static get dependencies() {
-		return [
-			Button,
-			RadioButton,
-			CheckBox,
-		] as Array<typeof UI5Element>;
-	}
 
 	constructor() {
 		super();
@@ -340,7 +351,7 @@ abstract class ListItem extends ListItemBase {
 			return;
 		}
 
-		this.fireEvent<SelectionRequestEventDetail>("_selection-requested", { item: this, selected: (e.target as HTMLInputElement).checked, selectionComponentPressed: true }); // Switch HTMLInputElement to CheckBox when ui5-check is migrated to TypeScript
+		this.fireEvent<SelectionRequestEventDetail>("_selection-requested", { item: this, selected: (e.target as CheckBox).checked, selectionComponentPressed: true });
 	}
 
 	onSingleSelectionComponentPress(e: MouseEvent) {
@@ -348,7 +359,7 @@ abstract class ListItem extends ListItemBase {
 			return;
 		}
 
-		this.fireEvent<SelectionRequestEventDetail>("_selection-requested", { item: this, selected: !(e.target as ListItemBase).selected, selectionComponentPressed: true });
+		this.fireEvent<SelectionRequestEventDetail>("_selection-requested", { item: this, selected: !(e.target as RadioButton).checked, selectionComponentPressed: true });
 	}
 
 	activate() {
@@ -444,14 +455,14 @@ abstract class ListItem extends ListItemBase {
 		// The text is added to aria-describedby because as part of the aria-labelledby
 		// the whole content of the item is readout when the aria-labelledby value is changed.
 		if (this._ariaSelected !== undefined) {
-			ariaSelectedText = this._ariaSelected ? ListItem.i18nBundle.getText(LIST_ITEM_SELECTED as I18nText) : ListItem.i18nBundle.getText(LIST_ITEM_NOT_SELECTED as I18nText);
+			ariaSelectedText = this._ariaSelected ? ListItem.i18nBundle.getText(LIST_ITEM_SELECTED) : ListItem.i18nBundle.getText(LIST_ITEM_NOT_SELECTED);
 		}
 
 		return ariaSelectedText;
 	}
 
 	get deleteText() {
-		return ListItem.i18nBundle.getText(DELETE as I18nText);
+		return ListItem.i18nBundle.getText(DELETE);
 	}
 
 	get hasDeleteButtonSlot() {
@@ -468,13 +479,13 @@ abstract class ListItem extends ListItemBase {
 		return `${this._id}-content ${this._id}-invisibleText`;
 	}
 
-	get _accInfo() {
+	get _accInfo(): AccInfo {
 		return {
 			role: this.accessibleRole || this.role,
 			ariaExpanded: undefined,
 			ariaLevel: this._level || undefined,
-			ariaLabel: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_CHECKBOX as I18nText),
-			ariaLabelRadioButton: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_RADIO_BUTTON as I18nText),
+			ariaLabel: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_CHECKBOX),
+			ariaLabelRadioButton: ListItem.i18nBundle.getText(ARIA_LABEL_LIST_ITEM_RADIO_BUTTON),
 			ariaSelectedText: this.ariaSelectedText,
 			ariaHaspopup: this.ariaHaspopup || undefined,
 		};

@@ -1,13 +1,13 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
-import fastNavigation from "@ui5/webcomponents-base/dist/decorators/fastNavigation.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
-import type { ClassMap, ComponentStylesData } from "@ui5/webcomponents-base/dist/types.js";
+import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import { renderFinished } from "@ui5/webcomponents-base/dist/Render.js";
 import {
 	isTabNext,
@@ -22,7 +22,6 @@ import getNormalizedTarget from "@ui5/webcomponents-base/dist/util/getNormalized
 import getEffectiveScrollbarStyle from "@ui5/webcomponents-base/dist/util/getEffectiveScrollbarStyle.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
 import isElementInView from "@ui5/webcomponents-base/dist/util/isElementInView.js";
 import ListMode from "./types/ListMode.js";
@@ -34,7 +33,6 @@ import type {
 	PressEventDetail,
 } from "./ListItem.js";
 import ListSeparators from "./types/ListSeparators.js";
-// @ts-ignore
 import BusyIndicator from "./BusyIndicator.js";
 
 // Template
@@ -49,7 +47,6 @@ import {
 	LOAD_MORE_TEXT, ARIA_LABEL_LIST_SELECTABLE,
 	ARIA_LABEL_LIST_MULTISELECTABLE,
 	ARIA_LABEL_LIST_DELETABLE,
-	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 const INFINITE_SCROLL_DEBOUNCE_RATE = 250; // ms
@@ -140,12 +137,17 @@ type ClickEventDetail = CloseEventDetail;
  * @alias sap.ui.webc.main.List
  * @extends sap.ui.webc.base.UI5Element
  * @tagname ui5-list
- * @appenddocs StandardListItem CustomListItem GroupHeaderListItem
+ * @appenddocs sap.ui.webc.main.StandardListItem sap.ui.webc.main.CustomListItem sap.ui.webc.main.GroupHeaderListItem
  * @public
  */
-@customElement("ui5-list")
-@fastNavigation
-
+@customElement({
+	tag: "ui5-list",
+	fastNavigation: true,
+	renderer: litRender,
+	template: ListTemplate,
+	styles: [browserScrollbarCSS, listCss],
+	dependencies: [BusyIndicator],
+})
 /**
  * Fired when an item is activated, unless the item's <code>type</code> property
  * is set to <code>Inactive</code>.
@@ -469,7 +471,7 @@ class List extends UI5Element {
 	_forwardingFocus: boolean;
 	resizeListenerAttached: boolean;
 	listEndObserved: boolean;
-	_handleResize: () => void;
+	_handleResize: ResizeObserverCallback;
 	initialIntersection: boolean;
 	_selectionRequested?: boolean;
 	growingIntersectionObserver?: IntersectionObserver | null;
@@ -477,24 +479,8 @@ class List extends UI5Element {
 	_beforeElement?: HTMLElement | null;
 	_afterElement?: HTMLElement | null;
 
-	static get render() {
-		return litRender;
-	}
-
-	static get template() {
-		return ListTemplate;
-	}
-
-	static get styles(): ComponentStylesData {
-		return [browserScrollbarCSS, listCss];
-	}
-
 	static async onDefine() {
 		List.i18nBundle = await getI18nBundle("@ui5/webcomponents");
-	}
-
-	static get dependencies() {
-		return [BusyIndicator];
 	}
 
 	constructor() {
@@ -620,13 +606,13 @@ class List extends UI5Element {
 
 	get ariaLabelModeText(): string {
 		if (this.isMultiSelect) {
-			return List.i18nBundle.getText(ARIA_LABEL_LIST_MULTISELECTABLE as I18nText);
+			return List.i18nBundle.getText(ARIA_LABEL_LIST_MULTISELECTABLE);
 		}
 		if (this.isSingleSelect) {
-			return List.i18nBundle.getText(ARIA_LABEL_LIST_SELECTABLE as I18nText);
+			return List.i18nBundle.getText(ARIA_LABEL_LIST_SELECTABLE);
 		}
 		if (this.isDelete) {
-			return List.i18nBundle.getText(ARIA_LABEL_LIST_DELETABLE as I18nText);
+			return List.i18nBundle.getText(ARIA_LABEL_LIST_DELETABLE);
 		}
 
 		return "";
@@ -645,7 +631,7 @@ class List extends UI5Element {
 	}
 
 	get _growingButtonText(): string {
-		return List.i18nBundle.getText(LOAD_MORE_TEXT as I18nText);
+		return List.i18nBundle.getText(LOAD_MORE_TEXT);
 	}
 
 	get busyIndPosition() {
@@ -786,7 +772,7 @@ class List extends UI5Element {
 	}
 
 	getItems(): Array<ListItemBase> {
-		return this.getSlottedNodes("items") as Array<ListItemBase>;
+		return this.getSlottedNodes<ListItemBase>("items");
 	}
 
 	getItemsForProcessing(): Array<ListItemBase> {

@@ -23,13 +23,24 @@ import { getSlotName, getSlottedNodesList } from "./util/SlotsHelper.js";
 import arraysAreEqual from "./util/arraysAreEqual.js";
 import { markAsRtlAware } from "./locale/RTLAwareRegistry.js";
 import preloadLinks from "./theming/preloadLinks.js";
-import { TemplateFunction, TemplateFunctionResult } from "./renderer/executeTemplate.js";
-import { PromiseResolve, ComponentStylesData, ClassMap } from "./types.js";
+import executeTemplate from "./renderer/executeTemplate.js";
+import type { TemplateFunction, TemplateFunctionResult } from "./renderer/executeTemplate.js";
+import type { PromiseResolve, ComponentStylesData, ClassMap } from "./types.js";
 
 let autoId = 0;
 
 const elementTimeouts = new Map<string, Promise<void>>();
 const uniqueDependenciesCache = new Map<typeof UI5Element, Array<typeof UI5Element>>();
+
+type Renderer = (templateResult: TemplateFunctionResult, container: HTMLElement | DocumentFragment, styleStrOrHrefsArr: string | Array<string> | undefined, forStaticArea: boolean, options: RendererOptions) => void;
+
+type RendererOptions = {
+	/**
+	 * An object to use as the `this` value for event listeners. It's often
+	 * useful to set this to the host component rendering a template.
+	 */
+	host?: object,
+}
 
 type ChangeInfo = {
 	type: "property" | "slot",
@@ -67,8 +78,6 @@ function _invalidate(this: UI5Element, changeInfo: ChangeInfo) {
 	this._eventProvider.fireEvent("invalidate", { ...changeInfo, target: this });
 }
 
-let metadata = {} as Metadata;
-
 /**
  * Base class for all UI5 Web Components
  *
@@ -99,7 +108,12 @@ abstract class UI5Element extends HTMLElement {
 	static template?: TemplateFunction;
 	static staticAreaTemplate?: TemplateFunction;
 	static _metadata: UI5ElementMetadata;
-	static render: (templateFunctionResult: TemplateFunctionResult, container: HTMLElement | DocumentFragment, styleStrOrHrefsArr: string | Array<string> | undefined, forStaticArea: boolean, options: { host: HTMLElement }) => void;
+
+	/**
+	 * @deprecated
+	 */
+	static render: Renderer;
+	static renderer?: Renderer;
 
 	constructor() {
 		super();
@@ -140,6 +154,16 @@ abstract class UI5Element extends HTMLElement {
 		}
 
 		return this.__id;
+	}
+
+	render() {
+		const template = (this.constructor as typeof UI5Element).template;
+		return executeTemplate(template!, this);
+	}
+
+	renderStatic() {
+		const template = (this.constructor as typeof UI5Element).staticAreaTemplate;
+		return executeTemplate(template!, this);
 	}
 
 	/**
@@ -668,7 +692,7 @@ abstract class UI5Element extends HTMLElement {
 				}
 				res = `${res}: ${x.name}`;
 				if (x.type === "property") {
-					res = `${res} ${x.oldValue} => ${x.newValue}`;
+					res = `${res} ${JSON.stringify(x.oldValue)} => ${JSON.stringify(x.newValue)}`;
 				}
 
 				return res;
@@ -764,15 +788,16 @@ abstract class UI5Element extends HTMLElement {
 
 	/**
 	 * Set the focus to the element, returned by "getFocusDomRef()" (marked by "data-sap-focus-ref")
+	 * @param {FocusOptions} focusOptions additional options for the focus
 	 * @public
 	 */
-	async focus() {
+	async focus(focusOptions?: FocusOptions) {
 		await this._waitForDomRef();
 
 		const focusDomRef = this.getFocusDomRef();
 
 		if (focusDomRef && typeof focusDomRef.focus === "function") {
-			focusDomRef.focus();
+			focusDomRef.focus(focusOptions);
 		}
 	}
 
@@ -830,8 +855,8 @@ abstract class UI5Element extends HTMLElement {
 	 * Useful when there are transitive slots in nested component scenarios and you don't want to get a list of the slots, but rather of their content.
 	 * @public
 	 */
-	getSlottedNodes(slotName: string) {
-		return getSlottedNodesList((this as unknown as Record<string, Array<SlotValue>>)[slotName]);
+	getSlottedNodes<T = Node>(slotName: string) {
+		return getSlottedNodesList((this as unknown as Record<string, Array<SlotValue>>)[slotName]) as Array<T>;
 	}
 
 	/**
@@ -871,14 +896,14 @@ abstract class UI5Element extends HTMLElement {
 	 * @private
 	 */
 	static _needsShadowDOM() {
-		return !!this.template;
+		return !!this.template || Object.prototype.hasOwnProperty.call(this.prototype, "render");
 	}
 
 	/**
 	 * @private
 	 */
 	static _needsStaticArea() {
-		return !!this.staticAreaTemplate;
+		return !!this.staticAreaTemplate || Object.prototype.hasOwnProperty.call(this.prototype, "renderStatic");
 	}
 
 	/**
@@ -1013,17 +1038,7 @@ abstract class UI5Element extends HTMLElement {
 	 * Returns the metadata object for this UI5 Web Component Class
 	 * @protected
 	 */
-	static get metadata() {
-		return metadata;
-	}
-
-	/**
-	 * Sets a new metadata object for this UI5 Web Component Class
-	 * @protected
-	 */
-	static set metadata(newMetadata) {
-		metadata = newMetadata;
-	}
+	static metadata: Metadata = {};
 
 	/**
 	 * Returns the CSS for this UI5 Web Component Class
@@ -1125,21 +1140,17 @@ abstract class UI5Element extends HTMLElement {
 			return this._metadata;
 		}
 
-		const effectiveMetadata = Object.keys(this.metadata).length ? this.metadata : this.decoratorMetadata;
-		const metadataObjects = [effectiveMetadata];
+		const metadataObjects = [this.metadata];
 		let klass = this; // eslint-disable-line
 		while (klass !== UI5Element) {
 			klass = Object.getPrototypeOf(klass);
-			const effectiveKlassMetadata = Object.keys(klass.metadata).length ? klass.metadata : klass.decoratorMetadata;
-			metadataObjects.unshift(effectiveKlassMetadata);
+			metadataObjects.unshift(klass.metadata);
 		}
 		const mergedMetadata = merge({}, ...metadataObjects) as Metadata;
 
 		this._metadata = new UI5ElementMetadata(mergedMetadata);
 		return this._metadata;
 	}
-
-	static decoratorMetadata: Metadata = {};
 }
 
 /**
@@ -1152,4 +1163,8 @@ const instanceOfUI5Element = (object: any): object is UI5Element => {
 
 export default UI5Element;
 export { instanceOfUI5Element };
-export type { ChangeInfo };
+export type {
+	ChangeInfo,
+	Renderer,
+	RendererOptions,
+};

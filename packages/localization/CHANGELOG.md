@@ -3,6 +3,183 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.13.0-rc.5](https://github.com/SAP/ui5-webcomponents/compare/v1.13.0-rc.4...v1.13.0-rc.5) (2023-05-11)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.13.0-rc.4](https://github.com/SAP/ui5-webcomponents/compare/v1.13.0-rc.3...v1.13.0-rc.4) (2023-05-04)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.13.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v1.13.0-rc.2...v1.13.0-rc.3) (2023-04-27)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.13.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v1.13.0-rc.1...v1.13.0-rc.2) (2023-04-20)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.13.0-rc.1](https://github.com/SAP/ui5-webcomponents/compare/v1.13.0-rc.0...v1.13.0-rc.1) (2023-04-13)
+
+
+### Features
+
+* **localization:** add `timezone` support [experimental] ([#6857](https://github.com/SAP/ui5-webcomponents/issues/6857)) ([aa91fd1](https://github.com/SAP/ui5-webcomponents/commit/aa91fd136f8bff757d476b83444f963d4299d562))
+
+
+
+
+
+# [1.13.0-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v1.12.0...v1.13.0-rc.0) (2023-04-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.12.0](https://github.com/SAP/ui5-webcomponents/compare/v1.12.0-rc.3...v1.12.0) (2023-04-04)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.12.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v1.12.0-rc.2...v1.12.0-rc.3) (2023-03-30)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.12.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v1.12.0-rc.1...v1.12.0-rc.2) (2023-03-23)
+
+
+### Bug Fixes
+
+* fix eslint for JS 3rd party projects ([#6725](https://github.com/SAP/ui5-webcomponents/issues/6725)) ([215a888](https://github.com/SAP/ui5-webcomponents/commit/215a888b006e46d431edd6324812b9d39249aef4))
+* inline sources in the .map file so the src folder is not mandatory ([#6732](https://github.com/SAP/ui5-webcomponents/issues/6732)) ([16771a6](https://github.com/SAP/ui5-webcomponents/commit/16771a64d7b13f418af9afa1a03b224fe3762775))
+
+
+
+
+
+# [1.12.0-rc.1](https://github.com/SAP/ui5-webcomponents/compare/v1.12.0-rc.0...v1.12.0-rc.1) (2023-03-16)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.12.0-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v1.11.0...v1.12.0-rc.0) (2023-03-09)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.11.0](https://github.com/SAP/ui5-webcomponents/compare/v1.11.0-rc.4...v1.11.0) (2023-03-06)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.11.0-rc.4](https://github.com/SAP/ui5-webcomponents/compare/v1.11.0-rc.3...v1.11.0-rc.4) (2023-03-02)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.11.0-rc.3](https://github.com/SAP/ui5-webcomponents/compare/v1.11.0-rc.2...v1.11.0-rc.3) (2023-02-23)
+
+
+### Features
+
+* **framework:** support legacy date calendar customizing ([#6462](https://github.com/SAP/ui5-webcomponents/issues/6462)) ([27df89b](https://github.com/SAP/ui5-webcomponents/commit/27df89bc62aaccbfbec5f4d36c520dbd762dab34))
+
+
+
+
+
+# [1.11.0-rc.2](https://github.com/SAP/ui5-webcomponents/compare/v1.11.0-rc.1...v1.11.0-rc.2) (2023-02-16)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.11.0-rc.1](https://github.com/SAP/ui5-webcomponents/compare/v1.11.0-rc.0...v1.11.0-rc.1) (2023-02-09)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+# [1.11.0-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v1.10.4-rc.0...v1.11.0-rc.0) (2023-02-02)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+## [1.10.4-rc.0](https://github.com/SAP/ui5-webcomponents/compare/v1.10.3...v1.10.4-rc.0) (2023-01-26)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+## [1.10.3](https://github.com/SAP/ui5-webcomponents/compare/v1.10.2...v1.10.3) (2023-01-25)
+
+**Note:** Version bump only for package @ui5/webcomponents-localization
+
+
+
+
+
+## [1.10.2](https://github.com/SAP/ui5-webcomponents/compare/v1.10.1...v1.10.2) (2023-01-25)
+
+**Note:** Version bump only for package ui5-webcomponents
+
+## [1.10.1](https://github.com/SAP/ui5-webcomponents/compare/v0.0.0-7b49a7ff1...v1.10.1) (2023-01-24)
+
+
+### Bug Fixes
+
+* add openui5 types as a dependency ([#6346](https://github.com/SAP/ui5-webcomponents/issues/6346)) ([2f06c71](https://github.com/SAP/ui5-webcomponents/commit/2f06c71eefb455db179cdbb9bd4b293af5b5aa2b))
+
+
+
+
+
 # [1.10.0](https://github.com/SAP/ui5-webcomponents/compare/v1.9.3...v1.10.0) (2023-01-20)
 
 

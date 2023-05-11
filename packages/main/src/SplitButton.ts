@@ -15,7 +15,6 @@ import {
 	isShift,
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { getEventMark } from "@ui5/webcomponents-base/dist/MarkedEvents.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
@@ -26,7 +25,6 @@ import Button from "./Button.js";
 import {
 	SPLIT_BUTTON_DESCRIPTION,
 	SPLIT_BUTTON_KEYBOARD_HINT,
-	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
@@ -66,7 +64,7 @@ import SplitButtonCss from "./generated/themes/SplitButton.css.js";
  * <ul>
  * <li><code>Space</code> or <code>Enter</code> - triggers the default action</li>
  * <li><code>Shift</code> or <code>Escape</code> - if <code>Space</code> is pressed, releases the default action button without triggering the click event.</li>
- * <li><code>Arrow Down</code>, <code>Arrow Up</code>, <code>Alt</code>+<code>Arrow Down</code>, <code>Alt</code>+<code>Arrow Up</code>, or <code>F4</code> - triggers the arrow action
+ * <li><code>Arrow Down</code>, <code>Arrow Up</code>, <code>Alt</code>+<code>Arrow Down</code>, <code>Alt</code>+<code>Arrow Up</code>, or <code>F4</code> - triggers the arrow action</li>
  * There are separate events that are fired on activating of <code>ui5-split-button</code> parts:
  * <ul>
  * <li><code>click</code> for the first button (default action)</li>
@@ -86,7 +84,13 @@ import SplitButtonCss from "./generated/themes/SplitButton.css.js";
  * @public
  * @since 1.1.0
  */
-@customElement("ui5-split-button")
+@customElement({
+	tag: "ui5-split-button",
+	renderer: litRender,
+	styles: SplitButtonCss,
+	template: SplitButtonTemplate,
+	dependencies: [Button],
+})
 /**
  * Fired when the user clicks on the default action.
  * @event sap.ui.webc.main.SplitButton#click
@@ -107,7 +111,7 @@ class SplitButton extends UI5Element {
 	 * <br><br>
 	 * Example:
 	 *
-	 * See all the available icons in the <ui5-link target="_blank" href="https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html" class="api-table-content-cell-link">Icon Explorer</ui5-link>.
+	 * See all the available icons in the <ui5-link target="_blank" href="https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html">Icon Explorer</ui5-link>.
 	 *
 	 * @type {string}
 	 * @name sap.ui.webc.main.SplitButton.prototype.icon
@@ -264,22 +268,6 @@ class SplitButton extends UI5Element {
 
 	static i18nBundle: I18nBundle;
 
-	static get render() {
-		return litRender;
-	}
-
-	static get styles() {
-		return SplitButtonCss;
-	}
-
-	static get template() {
-		return SplitButtonTemplate;
-	}
-
-	static get dependencies() {
-		return [Button];
-	}
-
 	static async onDefine() {
 		SplitButton.i18nBundle = await getI18nBundle("@ui5/webcomponents");
 	}
@@ -393,6 +381,10 @@ class SplitButton extends UI5Element {
 		return this.textContent;
 	}
 
+	get isTextButton() {
+		return !!this.textContent;
+	}
+
 	get textButton() {
 		return this.getDomRef()?.querySelector<Button>(".ui5-split-text-button");
 	}
@@ -407,13 +399,13 @@ class SplitButton extends UI5Element {
 			ariaExpanded: this._splitButtonAccInfo && this._splitButtonAccInfo.ariaExpanded,
 			ariaHaspopup: this._splitButtonAccInfo && this._splitButtonAccInfo.ariaHaspopup,
 			// affects root element
-			description: SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION as I18nText),
-			keyboardHint: SplitButton.i18nBundle.getText(SPLIT_BUTTON_KEYBOARD_HINT as I18nText),
+			description: SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION),
+			keyboardHint: SplitButton.i18nBundle.getText(SPLIT_BUTTON_KEYBOARD_HINT),
 		};
 	}
 
 	get ariaLabelText() {
-		return [SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION as I18nText), SplitButton.i18nBundle.getText(SPLIT_BUTTON_KEYBOARD_HINT as I18nText)].join(" ");
+		return [SplitButton.i18nBundle.getText(SPLIT_BUTTON_DESCRIPTION), SplitButton.i18nBundle.getText(SPLIT_BUTTON_KEYBOARD_HINT)].join(" ");
 	}
 }
 

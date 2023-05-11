@@ -4,10 +4,8 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
-// @ts-ignore
 import CheckBox from "./CheckBox.js";
 import type { ITableRow, TableColumnInfo } from "./Table.js";
 import TableGroupRowTemplate from "./generated/templates/TableGroupRowTemplate.lit.js";
@@ -16,11 +14,10 @@ import TableMode from "./types/TableMode.js";
 // Texts
 import {
 	TABLE_GROUP_ROW_ARIA_LABEL,
-// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
-import styles from "./generated/themes/TableGroupRow.css.js";
+import tableGroupRowStyles from "./generated/themes/TableGroupRow.css.js";
 
 /**
  * @class
@@ -47,7 +44,15 @@ import styles from "./generated/themes/TableGroupRow.css.js";
  * @implements sap.ui.webc.main.ITableRow
  * @public
  */
-@customElement("ui5-table-group-row")
+@customElement({
+	tag: "ui5-table-group-row",
+	styles: tableGroupRowStyles,
+	renderer: litRender,
+	template: TableGroupRowTemplate,
+	dependencies: [
+		CheckBox,
+	],
+})
 @event("_focused")
 class TableGroupRow extends UI5Element implements ITableRow, ITabbable {
 	/**
@@ -96,24 +101,6 @@ class TableGroupRow extends UI5Element implements ITableRow, ITabbable {
 	 * @public
 	 */
 
-	static get styles() {
-		return styles;
-	}
-
-	static get render() {
-		return litRender;
-	}
-
-	static get template() {
-		return TableGroupRowTemplate;
-	}
-
-	static get dependencies() {
-		return [
-			CheckBox,
-		];
-	}
-
 	static i18nBundle: I18nBundle;
 
 	_colSpan?: number;
@@ -123,7 +110,7 @@ class TableGroupRow extends UI5Element implements ITableRow, ITabbable {
 	}
 
 	get ariaLabelText() {
-		return `${TableGroupRow.i18nBundle.getText(TABLE_GROUP_ROW_ARIA_LABEL as I18nText)} ${this.innerText}. ${this._ariaPosition}`;
+		return `${TableGroupRow.i18nBundle.getText(TABLE_GROUP_ROW_ARIA_LABEL)} ${this.innerText}. ${this._ariaPosition}`;
 	}
 
 	visibleColCount(): number {

@@ -21,7 +21,7 @@ const copyIconAssetsCommand = (options) => {
 		return 	{
 			default: "nps copy.json-imports copy.icon-collection",
 			"json-imports": `node "${LIB}/copy-and-watch/index.js" --silent "src/**/*.js" dist/`,
-			"icon-collection": `node "${LIB}/copy-and-watch/index.js" --silent "src/*.json" dist/generated/assets/`,
+			"icon-collection": `node "${LIB}/copy-and-watch/index.js" --silent "src/*.json" src/generated/assets/`,
 		}
 	}
 
@@ -32,7 +32,7 @@ const copyIconAssetsCommand = (options) => {
 
 	options.versions.forEach((v) => {
 		command.default += ` copy.icon-collection${v}`;
-		command[`icon-collection${v}`] = `node "${LIB}/copy-and-watch/index.js" --silent "src/${v}/*.json" dist/generated/assets/${v}/`;
+		command[`icon-collection${v}`] = `node "${LIB}/copy-and-watch/index.js" --silent "src/${v}/*.json" src/generated/assets/${v}/`;
 	});
 
 	return command;
@@ -41,15 +41,17 @@ const copyIconAssetsCommand = (options) => {
 const getScripts = (options) => {
 	const createJSImportsCmd = createIconImportsCommand(options);
 	const copyAssetsCmd = copyIconAssetsCommand(options);
+	const tsCommand = options.typescript ? "tsc" : "";
+	const tsCrossEnv = options.typescript ? "cross-env UI5_TS=true" : "";
 
 	const scripts = {
-		clean: "rimraf dist",
+		clean: "rimraf dist && rimraf src/generated",
 		copy: copyAssetsCmd,
 		build: {
-			default: `nps clean typescript copy build.i18n build.icons build.jsonImports`,
+			default: `${tsCrossEnv} nps clean copy build.i18n typescript build.icons build.jsonImports`,
 			i18n: {
 				default: "nps build.i18n.defaultsjs build.i18n.json",
-				defaultsjs: `mkdirp dist/generated/i18n && node "${LIB}/i18n/defaults.js" src/i18n dist/generated/i18n`,
+				defaultsjs: `mkdirp dist/generated/i18n && node "${LIB}/i18n/defaults.js" src/i18n src/generated/i18n`,
 				json: `mkdirp dist/generated/assets/i18n && node "${LIB}/i18n/toJSON.js" src/i18n dist/generated/assets/i18n`,
 			},
 			jsonImports: {
@@ -58,7 +60,7 @@ const getScripts = (options) => {
 			},
 			icons: createJSImportsCmd,
 		},
-		typescript: "tsc",
+		typescript: tsCommand,
 	};
 
 	return scripts;

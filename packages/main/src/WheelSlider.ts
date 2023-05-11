@@ -23,7 +23,7 @@ import WheelSliderCss from "./generated/themes/WheelSlider.css.js";
 const CELL_SIZE_COMPACT = 32;
 const CELL_SIZE_COZY = 46;
 
-type WheelSliderSelectEventDetail = { value: string }
+type WheelSliderSelectEventDetail = { value: string };
 
 /**
  * @class
@@ -44,10 +44,16 @@ type WheelSliderSelectEventDetail = { value: string }
  * @public
  * @since 1.0.0-rc.6
  */
-@customElement("ui5-wheelslider")
-
+@customElement({
+	tag: "ui5-wheelslider",
+	renderer: litRender,
+	styles: WheelSliderCss,
+	template: WheelSliderTemplate,
+	dependencies: [Button],
+})
 /**
- *  Fires when new value is selected.
+ * Fires when new value is selected.
+ * @event sap.ui.webc.main.WheelSlider#select
  */
 @event("select", {
 	detail: {
@@ -59,11 +65,13 @@ type WheelSliderSelectEventDetail = { value: string }
 
 /**
  * Fires when the wheel slider is expanded.
+ * @event sap.ui.webc.main.WheelSlider#expand
  */
 @event("expand")
 
 /**
  * Fires when the wheel slider is collapsed.
+ * @event sap.ui.webc.main.WheelSlider#collapse
  */
 @event("collapse")
 class WheelSlider extends UI5Element {
@@ -134,18 +142,6 @@ class WheelSlider extends UI5Element {
 	_scroller: ScrollEnablement;
 	_prevWheelTimestamp?: number;
 
-	static get render() {
-		return litRender;
-	}
-
-	static get styles() {
-		return WheelSliderCss;
-	}
-
-	static get template() {
-		return WheelSliderTemplate;
-	}
-
 	constructor() {
 		super();
 		this._currentElementIndex = 0;
@@ -167,10 +163,6 @@ class WheelSlider extends UI5Element {
 		}
 
 		this._buildItemsToShow();
-	}
-
-	static get dependencies() {
-		return [Button];
 	}
 
 	onAfterRendering() {
@@ -289,7 +281,7 @@ class WheelSlider extends UI5Element {
 			this._scroller.scrollTo(0, scrollBy, 5, 100); // sometimes the container isn't painted yet so retry 5 times (although it succeeds on the 1st)
 			this._currentElementIndex = index;
 			this.value = this._items[index - (this._getCurrentRepetition() * this._items.length)];
-			this.fireEvent("select", { value: this.value });
+			this.fireEvent<WheelSliderSelectEventDetail>("select", { value: this.value });
 		}
 	}
 
@@ -352,6 +344,10 @@ class WheelSlider extends UI5Element {
 			return;
 		}
 
+		if (this._prevWheelTimestamp && (e.timeStamp < this._prevWheelTimestamp + 250 || !this.expanded)) {
+			return;
+		}
+
 		if (e.deltaY > 0) {
 			this._itemUp();
 		} else if (e.deltaY < 0) {
@@ -371,7 +367,7 @@ class WheelSlider extends UI5Element {
 		if (this.expanded) {
 			this.value = target.textContent || "";
 			this._selectElement(target);
-			this.fireEvent("select", { value: this.value });
+			this.fireEvent<WheelSliderSelectEventDetail>("select", { value: this.value });
 		} else {
 			this.expanded = true;
 		}

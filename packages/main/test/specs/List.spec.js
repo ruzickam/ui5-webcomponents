@@ -1,5 +1,5 @@
-const list = require("../pageobjects/ListTestPage");
-const assert = require("chai").assert;
+import list from "../pageobjects/ListTestPage.js";
+import { assert } from "chai";
 
 /**
  *
@@ -36,12 +36,20 @@ describe("List Tests", () => {
 	it("itemClick and selectionChange events are fired in Single selection", async () => {
 		const itemClickResultField = await browser.$("#itemClickResultField");
 		const selectionChangeResultField = await browser.$("#selectionChangeResultField");
+		const selectionChangeResultFieldRadio = await browser.$("#selectionChangeResultFieldRadio");
 		const firstItem = await browser.$("#listEvents #country1");
+		const secondItemRadio = await browser.$("#listEvents #country2").shadow$("ui5-radio-button");
 
 		await firstItem.click();
 
 		assert.strictEqual(await itemClickResultField.getProperty("value"), "1", "itemClick event has been fired once");
 		assert.strictEqual(await selectionChangeResultField.getProperty("value"), "1", "selectionChange event has been fired.");
+
+		await secondItemRadio.click();
+		assert.strictEqual(await itemClickResultField.getProperty("value"), "2", "itemClick event has been fired second time");
+		assert.strictEqual(await selectionChangeResultField.getProperty("value"), "2", "selectionChange event has been fired second time.");
+		assert.strictEqual(await selectionChangeResultFieldRadio.getProperty("value"), "true", "selectionChange event correct detail - selectionComponentPressed.");
+
 	});
 
 	it("itemClick and selectionChange events are fired in Multi selection", async () => {
@@ -297,6 +305,25 @@ describe("List Tests", () => {
 		// and after button should be focused
 		await growingBtn.keys("Tab");
 		assert.ok(await afterBtn.isFocused(), "element outside of the list is focused");
+	});
+
+	it("keyboard handling on TAB when 2 level nested UI5Element is focused", async () => {
+		const list = await browser.$("#focusAfterList");
+		const breadcrumbsItem = await list.$(".breadcrumbsItem");
+		const breadcrumb = await list.$("ui5-breadcrumbs");
+		const afterBtn = await browser.$('#afterFocusListBtn');
+
+		// act: click on the item
+		await breadcrumbsItem.click();
+		assert.ok(await breadcrumbsItem.isFocused(), "breadcrumb is focused");
+
+		// act: Tab from list item to breadcrumbs
+		await breadcrumbsItem.keys("Tab");
+		assert.ok(await breadcrumb.isFocused(), "breadcrumb is focused");
+
+		// act: Tab to element outside of the list -> focus should go to after button
+		await breadcrumb.keys("Tab");
+		assert.ok(await afterBtn.isFocused(), "after button is focused");
 	});
 
 	it("does not focus next / prev item when right / left arrow is pressed", async () => {

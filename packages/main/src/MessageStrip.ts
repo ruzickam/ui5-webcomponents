@@ -3,7 +3,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import languageAware from "@ui5/webcomponents-base/dist/decorators/languageAware.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
@@ -25,7 +24,6 @@ import {
 	MESSAGE_STRIP_WARNING,
 	MESSAGE_STRIP_SUCCESS,
 	MESSAGE_STRIP_INFORMATION,
-	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -82,9 +80,14 @@ type DesignTypeAnnouncemnt = Record<MessageStripDesign, string>;
  * @public
  * @since 0.9.0
  */
-@customElement("ui5-message-strip")
-@languageAware
-
+@customElement({
+	tag: "ui5-message-strip",
+	languageAware: true,
+	renderer: litRender,
+	template: MessageStripTemplate,
+	styles: messageStripCss,
+	dependencies: [Icon, Button],
+})
 /**
  * Fired when the close button is pressed either with a
  * click/tap or by using the Enter or Space key.
@@ -155,7 +158,7 @@ class MessageStrip extends UI5Element {
 	 * The SAP-icons font provides numerous options.
 	 * <br><br>
 	 *
-	 * See all the available icons in the <ui5-link target="_blank" href="https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html" class="api-table-content-cell-link">Icon Explorer</ui5-link>.
+	 * See all the available icons in the <ui5-link target="_blank" href="https://sdk.openui5.org/test-resources/sap/m/demokit/iconExplorer/webapp/index.html">Icon Explorer</ui5-link>.
 	 *
 	 * @type {sap.ui.webc.main.IIcon}
 	 * @name sap.ui.webc.main.MessageStrip.prototype.icon
@@ -167,24 +170,8 @@ class MessageStrip extends UI5Element {
 
 	static i18nBundle: I18nBundle;
 
-	static get render() {
-		return litRender;
-	}
-
-	static get template() {
-		return MessageStripTemplate;
-	}
-
-	static get styles() {
-		return messageStripCss;
-	}
-
 	_closeClick() {
 		this.fireEvent("close");
-	}
-
-	static get dependencies() {
-		return [Icon, Button];
 	}
 
 	static async onDefine() {
@@ -197,10 +184,10 @@ class MessageStrip extends UI5Element {
 		};
 
 		return {
-			Information: getTranslation(MESSAGE_STRIP_INFORMATION as I18nText),
-			Positive: getTranslation(MESSAGE_STRIP_SUCCESS as I18nText),
-			Negative: getTranslation(MESSAGE_STRIP_ERROR as I18nText),
-			Warning: getTranslation(MESSAGE_STRIP_WARNING as I18nText),
+			Information: getTranslation(MESSAGE_STRIP_INFORMATION),
+			Positive: getTranslation(MESSAGE_STRIP_SUCCESS),
+			Negative: getTranslation(MESSAGE_STRIP_ERROR),
+			Warning: getTranslation(MESSAGE_STRIP_WARNING),
 		};
 	}
 
@@ -209,11 +196,11 @@ class MessageStrip extends UI5Element {
 	}
 
 	get _closeButtonText() {
-		return MessageStrip.i18nBundle.getText(MESSAGE_STRIP_CLOSE_BUTTON as I18nText);
+		return MessageStrip.i18nBundle.getText(MESSAGE_STRIP_CLOSE_BUTTON);
 	}
 
 	get _closableText() {
-		return MessageStrip.i18nBundle.getText(MESSAGE_STRIP_CLOSABLE as I18nText);
+		return MessageStrip.i18nBundle.getText(MESSAGE_STRIP_CLOSABLE);
 	}
 
 	get classes(): ClassMap {

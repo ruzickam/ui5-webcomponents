@@ -1,7 +1,6 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import type { ChangeInfo } from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import languageAware from "@ui5/webcomponents-base/dist/decorators/languageAware.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
@@ -15,9 +14,9 @@ import {
 } from "@ui5/webcomponents-base/dist/Keys.js";
 import Integer from "@ui5/webcomponents-base/dist/types/Integer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import BreadcrumbsDesign from "./types/BreadcrumbsDesign.js";
 import BreadcrumbsSeparatorStyle from "./types/BreadcrumbsSeparatorStyle.js";
@@ -27,7 +26,6 @@ import {
 	BREADCRUMBS_ARIA_LABEL,
 	BREADCRUMBS_OVERFLOW_ARIA_LABEL,
 	BREADCRUMBS_CANCEL_BUTTON,
-	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 import Link from "./Link.js";
 import type { LinkClickEventDetail } from "./Link.js";
@@ -38,6 +36,7 @@ import type { SelectionChangeEventDetail } from "./List.js";
 import StandardListItem from "./StandardListItem.js";
 import Icon from "./Icon.js";
 import Button from "./Button.js";
+import "@ui5/webcomponents-icons/dist/slim-arrow-down.js";
 
 // Templates
 import BreadcrumbsTemplate from "./generated/templates/BreadcrumbsTemplate.lit.js";
@@ -91,13 +90,29 @@ type FocusAdaptor = ITabbable & {
  * @alias sap.ui.webc.main.Breadcrumbs
  * @extends sap.ui.webc.base.UI5Element
  * @tagname ui5-breadcrumbs
- * @appenddocs BreadcrumbsItem
+ * @appenddocs sap.ui.webc.main.BreadcrumbsItem
  * @public
  * @since 1.0.0-rc.15
  */
-@customElement("ui5-breadcrumbs")
-@languageAware
-
+@customElement({
+	tag: "ui5-breadcrumbs",
+	languageAware: true,
+	renderer: litRender,
+	template: BreadcrumbsTemplate,
+	staticAreaTemplate: BreadcrumbsPopoverTemplate,
+	styles: breadcrumbsCss,
+	staticAreaStyles: breadcrumbsPopoverCss,
+	dependencies: [
+		BreadcrumbsItem,
+		Link,
+		Label,
+		ResponsivePopover,
+		List,
+		StandardListItem,
+		Icon,
+		Button,
+	],
+})
 /**
  * Fires when a <code>BreadcrumbsItem</code> is clicked.
  * <b>Note:</b> You can prevent browser location change by calling <code>event.preventDefault()</code>.
@@ -182,7 +197,7 @@ class Breadcrumbs extends UI5Element {
 	items!: Array<BreadcrumbsItem>;
 
 	_itemNavigation: ItemNavigation
-	_onResizeHandler: () => void;
+	_onResizeHandler: ResizeObserverCallback;
 
 	// maps items to their widths
 	_breadcrumbItemWidths = new WeakMap<BreadcrumbsItem, number>();
@@ -191,26 +206,6 @@ class Breadcrumbs extends UI5Element {
 	responsivePopover?: ResponsivePopover;
 	_labelFocusAdaptor: FocusAdaptor;
 	static i18nBundle: I18nBundle;
-
-	static get render() {
-		return litRender;
-	}
-
-	static get template() {
-		return BreadcrumbsTemplate;
-	}
-
-	static get staticAreaTemplate() {
-		return BreadcrumbsPopoverTemplate;
-	}
-
-	static get styles() {
-		return breadcrumbsCss;
-	}
-
-	static get staticAreaStyles() {
-		return breadcrumbsPopoverCss;
-	}
 
 	constructor() {
 		super();
@@ -250,7 +245,7 @@ class Breadcrumbs extends UI5Element {
 	}
 
 	_getItems() {
-		return this.getSlottedNodes("items") as Array<BreadcrumbsItem>;
+		return this.getSlottedNodes<BreadcrumbsItem>("items");
 	}
 
 	onBeforeRendering() {
@@ -502,7 +497,7 @@ class Breadcrumbs extends UI5Element {
 	}
 
 	_getItemPositionText(position: number, size: number) {
-		return Breadcrumbs.i18nBundle.getText(BREADCRUMB_ITEM_POS as I18nText, position, size);
+		return Breadcrumbs.i18nBundle.getText(BREADCRUMB_ITEM_POS, position, size);
 	}
 
 	_getItemAccessibleName(item: BreadcrumbsItem, position: number, size: number) {
@@ -649,28 +644,15 @@ class Breadcrumbs extends UI5Element {
 	}
 
 	get _accessibleNameText() {
-		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_ARIA_LABEL as I18nText);
+		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_ARIA_LABEL);
 	}
 
 	get _dropdownArrowAccessibleNameText() {
-		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_OVERFLOW_ARIA_LABEL as I18nText);
+		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_OVERFLOW_ARIA_LABEL);
 	}
 
 	get _cancelButtonText() {
-		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_CANCEL_BUTTON as I18nText);
-	}
-
-	static get dependencies() {
-		return [
-			BreadcrumbsItem,
-			Link,
-			Label,
-			ResponsivePopover,
-			List,
-			StandardListItem,
-			Icon,
-			Button,
-		];
+		return Breadcrumbs.i18nBundle.getText(BREADCRUMBS_CANCEL_BUTTON);
 	}
 
 	static async onDefine() {

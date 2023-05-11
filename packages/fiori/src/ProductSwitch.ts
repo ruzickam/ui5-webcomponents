@@ -1,5 +1,4 @@
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
@@ -7,6 +6,7 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import Integer from "@ui5/webcomponents-base/dist/types/Integer.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 
@@ -19,7 +19,6 @@ import ProductSwitchTemplate from "./generated/templates/ProductSwitchTemplate.l
 
 import {
 	PRODUCT_SWITCH_CONTAINER_LABEL,
-	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -56,11 +55,16 @@ import type ProductSwitchItem from "./ProductSwitchItem.js";
  * @alias sap.ui.webc.fiori.ProductSwitch
  * @extends sap.ui.webc.base.UI5Element
  * @tagname ui5-product-switch
- * @appenddocs ProductSwitchItem
+ * @appenddocs sap.ui.webc.fiori.ProductSwitchItem
  * @public
  * @since 1.0.0-rc.5
  */
-@customElement("ui5-product-switch")
+@customElement({
+	tag: "ui5-product-switch",
+	renderer: litRender,
+	styles: ProductSwitchCss,
+	template: ProductSwitchTemplate,
+})
 class ProductSwitch extends UI5Element {
 	constructor() {
 		super();
@@ -97,21 +101,9 @@ class ProductSwitch extends UI5Element {
 	_itemNavigation: ItemNavigation;
 	_currentIndex: number;
 	_rowSize: number;
-	_handleResizeBound: () => void;
+	_handleResizeBound: ResizeObserverCallback;
 
 	static i18nBundle: I18nBundle;
-
-	static get render() {
-		return litRender;
-	}
-
-	static get styles() {
-		return ProductSwitchCss;
-	}
-
-	static get template() {
-		return ProductSwitchTemplate;
-	}
 
 	static get ROW_MIN_WIDTH() {
 		return {
@@ -125,7 +117,7 @@ class ProductSwitch extends UI5Element {
 	}
 
 	get _ariaLabelText() {
-		return ProductSwitch.i18nBundle.getText(PRODUCT_SWITCH_CONTAINER_LABEL as I18nText);
+		return ProductSwitch.i18nBundle.getText(PRODUCT_SWITCH_CONTAINER_LABEL);
 	}
 
 	onEnterDOM() {

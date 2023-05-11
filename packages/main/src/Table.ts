@@ -1,16 +1,15 @@
 import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import customElement from "@ui5/webcomponents-base/dist/decorators/customElement.js";
-import fastNavigation from "@ui5/webcomponents-base/dist/decorators/fastNavigation.js";
 import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import event from "@ui5/webcomponents-base/dist/decorators/event.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
+import type { ResizeObserverCallback } from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
 import ItemNavigation from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import Integer from "@ui5/webcomponents-base/dist/types/Integer.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import NavigationMode from "@ui5/webcomponents-base/dist/types/NavigationMode.js";
 import {
 	isTabNext,
@@ -35,7 +34,6 @@ import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import debounce from "@ui5/webcomponents-base/dist/util/debounce.js";
 import isElementInView from "@ui5/webcomponents-base/dist/util/isElementInView.js";
 import TableGrowingMode from "./types/TableGrowingMode.js";
-// @ts-ignore
 import BusyIndicator from "./BusyIndicator.js";
 import type {
 	TableRowSelectionRequestedEventDetail,
@@ -47,7 +45,6 @@ import type TableCell from "./TableCell.js";
 import type TableColumn from "./TableColumn.js";
 import type TableColumnPopinDisplay from "./types/TableColumnPopinDisplay.js";
 import TableMode from "./types/TableMode.js";
-// @ts-ignore
 import CheckBox from "./CheckBox.js"; // Ensure the dependency as it is being used in the renderer
 
 // Texts
@@ -56,14 +53,13 @@ import {
 	ARIA_LABEL_SELECT_ALL_CHECKBOX,
 	TABLE_HEADER_ROW_INFORMATION,
 	TABLE_ROW_POSITION,
-// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Template
 import TableTemplate from "./generated/templates/TableTemplate.lit.js";
 
 // Styles
-import styles from "./generated/themes/Table.css.js";
+import tableStyles from "./generated/themes/Table.css.js";
 
 const GROWING_WITH_SCROLL_DEBOUNCE_RATE = 250; // ms
 
@@ -116,7 +112,7 @@ enum TableFocusTargetElement {
  *
  * <h3 class="comment-api-title">Overview</h3>
  *
- * The <code>ui5-import type { table } from "./TableRow.js";/code> component provides a set of sophisticated and convenient functions for responsive table design.
+ * The <code>ui5-table</code> component provides a set of sophisticated and convenient functions for responsive table design.
  * It provides a comprehensive set of features for displaying and dealing with vast amounts of data.
  * <br><br>
  * To render the <code>Table</code> properly, the order of the <code>columns</code> should match with the
@@ -178,11 +174,17 @@ enum TableFocusTargetElement {
  * @alias sap.ui.webc.main.Table
  * @extends sap.ui.webc.base.UI5Element
  * @tagname ui5-table
- * @appenddocs TableColumn TableRow TableGroupRow TableCell
+ * @appenddocs sap.ui.webc.main.TableColumn sap.ui.webc.main.TableRow sap.ui.webc.main.TableGroupRow sap.ui.webc.main.TableCell
  * @public
  */
-@customElement("ui5-table")
-@fastNavigation
+@customElement({
+	tag: "ui5-table",
+	fastNavigation: true,
+	styles: tableStyles,
+	renderer: litRender,
+	template: TableTemplate,
+	dependencies: [BusyIndicator, CheckBox],
+})
 /** Fired when a row in <code>Active</code> mode is clicked or <code>Enter</code> key is pressed.
 *
 * @event sap.ui.webc.main.Table#row-click
@@ -493,22 +495,6 @@ class Table extends UI5Element {
 	})
 	columns!: Array<TableColumn>;
 
-	static get styles() {
-		return styles;
-	}
-
-	static get render() {
-		return litRender;
-	}
-
-	static get template() {
-		return TableTemplate;
-	}
-
-	static get dependencies() {
-		return [BusyIndicator, CheckBox];
-	}
-
 	static async onDefine() {
 		Table.i18nBundle = await getI18nBundle("@ui5/webcomponents");
 	}
@@ -517,11 +503,11 @@ class Table extends UI5Element {
 
 	fnHandleF7: (e: CustomEvent) => void;
 	fnOnRowFocused: (e: CustomEvent) => void;
-	_handleResize: () => void;
+	_handleResize: ResizeObserverCallback;
 
 	moreDataText?: string;
 	tableEndObserved: boolean;
-	visibleColumns?: Array<TableColumn>
+	visibleColumns: Array<TableColumn>;
 	visibleColumnsCount?: number;
 	lastFocusedElement: HTMLElement | null;
 	growingIntersectionObserver?: IntersectionObserver | null;
@@ -537,6 +523,7 @@ class Table extends UI5Element {
 	constructor() {
 		super();
 
+		this.visibleColumns = []; // template loop should always have a defined array
 		// The ItemNavigation requires each item to 1) have a "_tabIndex" property and 2) be either a UI5Element, or have an id property (to find it in the component's shadow DOM by)
 		this._columnHeader = {
 			id: `${this._id}-columnHeader`,
@@ -578,7 +565,7 @@ class Table extends UI5Element {
 				row._columnsInfoString = JSON.stringify(row._columnsInfo);
 			}
 
-			row._ariaPosition = Table.i18nBundle.getText(TABLE_ROW_POSITION as I18nText, index + 2, rowsCount);
+			row._ariaPosition = Table.i18nBundle.getText(TABLE_ROW_POSITION, index + 2, rowsCount);
 			row._busy = this.busy;
 			row.removeEventListener("ui5-_focused", this.fnOnRowFocused as EventListener);
 			row.addEventListener("ui5-_focused", this.fnOnRowFocused as EventListener);
@@ -1223,12 +1210,12 @@ class Table extends UI5Element {
 	}
 
 	get _growingButtonText(): string {
-		return this.growingButtonText || Table.i18nBundle.getText(LOAD_MORE_TEXT as I18nText);
+		return this.growingButtonText || Table.i18nBundle.getText(LOAD_MORE_TEXT);
 	}
 
 	get ariaLabelText(): string {
 		const rowsCount = this.rows.length + 1;
-		const headerRowText = Table.i18nBundle.getText(TABLE_HEADER_ROW_INFORMATION as I18nText, rowsCount);
+		const headerRowText = Table.i18nBundle.getText(TABLE_HEADER_ROW_INFORMATION, rowsCount);
 		const columnsTitle = this.columns.map(column => {
 			return column.textContent!.trim();
 		}).join(" ");
@@ -1241,7 +1228,7 @@ class Table extends UI5Element {
 	}
 
 	get ariaLabelSelectAllText(): string {
-		return Table.i18nBundle.getText(ARIA_LABEL_SELECT_ALL_CHECKBOX as I18nText);
+		return Table.i18nBundle.getText(ARIA_LABEL_SELECT_ALL_CHECKBOX);
 	}
 
 	get loadMoreAriaLabelledBy(): string {

@@ -5,7 +5,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import slot from "@ui5/webcomponents-base/dist/decorators/slot.js";
 import type { ClassMap } from "@ui5/webcomponents-base/dist/types.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import ResizeHandler from "@ui5/webcomponents-base/dist/delegate/ResizeHandler.js";
@@ -20,7 +19,6 @@ import DynamicSideContentCss from "./generated/themes/DynamicSideContent.css.js"
 // Texts
 import {
 	DSC_SIDE_ARIA_LABEL,
-// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Breakpoint-related constants
@@ -106,7 +104,12 @@ const S_M_BREAKPOINT = 720,	// Breakpoint between S and M screen sizes
  * @public
  * @since 1.1.0
  */
-@customElement("ui5-dynamic-side-content")
+@customElement({
+	tag: "ui5-dynamic-side-content",
+	renderer: litRender,
+	styles: DynamicSideContentCss,
+	template: DynamicSideContentTemplate,
+})
 /**
  * Fires when the current breakpoint has been changed.
  * @event sap.ui.webc.fiori.DynamicSideContent#layout-change
@@ -291,18 +294,6 @@ class DynamicSideContent extends UI5Element {
 
 	static i18nBundle: I18nBundle;
 
-	static get styles() {
-		return DynamicSideContentCss;
-	}
-
-	static get render() {
-		return litRender;
-	}
-
-	static get template() {
-		return DynamicSideContentTemplate;
-	}
-
 	static async onDefine() {
 		DynamicSideContent.i18nBundle = await getI18nBundle("@ui5/webcomponents-fiori");
 	}
@@ -371,7 +362,7 @@ class DynamicSideContent extends UI5Element {
 
 	get accInfo() {
 		return {
-			"label": DynamicSideContent.i18nBundle.getText(DSC_SIDE_ARIA_LABEL as I18nText),
+			"label": DynamicSideContent.i18nBundle.getText(DSC_SIDE_ARIA_LABEL),
 		};
 	}
 

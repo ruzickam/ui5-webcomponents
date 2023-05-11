@@ -4,7 +4,6 @@ import property from "@ui5/webcomponents-base/dist/decorators/property.js";
 import litRender from "@ui5/webcomponents-base/dist/renderer/LitRenderer.js";
 import { getI18nBundle } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type I18nBundle from "@ui5/webcomponents-base/dist/i18nBundle.js";
-import type { I18nText } from "@ui5/webcomponents-base/dist/i18nBundle.js";
 import type { ITabbable } from "@ui5/webcomponents-base/dist/delegate/ItemNavigation.js";
 import CSSColor from "@ui5/webcomponents-base/dist/types/CSSColor.js";
 import { isPhone } from "@ui5/webcomponents-base/dist/Device.js";
@@ -12,7 +11,6 @@ import Integer from "@ui5/webcomponents-base/dist/types/Integer.js";
 import ColorPaletteItemTemplate from "./generated/templates/ColorPaletteItemTemplate.lit.js";
 import {
 	COLORPALETTE_COLOR_LABEL,
-	// @ts-ignore
 } from "./generated/i18n/i18n-defaults.js";
 
 // Styles
@@ -29,12 +27,18 @@ import ColorPaletteItemCss from "./generated/themes/ColorPaletteItem.css.js";
  * @author SAP SE
  * @alias sap.ui.webc.main.ColorPaletteItem
  * @extends sap.ui.webc.base.UI5Element
+ * @abstract
  * @tagname ui5-color-palette-item
  * @since 1.0.0-rc.12
  * @implements sap.ui.webc.main.IColorPaletteItem
  * @public
  */
-@customElement("ui5-color-palette-item")
+@customElement({
+	tag: "ui5-color-palette-item",
+	renderer: litRender,
+	styles: ColorPaletteItemCss,
+	template: ColorPaletteItemTemplate,
+})
 class ColorPaletteItem extends UI5Element implements ITabbable {
 	/**
 	 * Defines the colour of the component.
@@ -81,18 +85,6 @@ class ColorPaletteItem extends UI5Element implements ITabbable {
 
 	static i18nBundle: I18nBundle;
 
-	static get render() {
-		return litRender;
-	}
-
-	static get styles() {
-		return ColorPaletteItemCss;
-	}
-
-	static get template() {
-		return ColorPaletteItemTemplate;
-	}
-
 	static async onDefine() {
 		ColorPaletteItem.i18nBundle = await getI18nBundle("@ui5/webcomponents");
 	}
@@ -107,7 +99,7 @@ class ColorPaletteItem extends UI5Element implements ITabbable {
 	}
 
 	get colorLabel() {
-		return ColorPaletteItem.i18nBundle.getText(COLORPALETTE_COLOR_LABEL as I18nText);
+		return ColorPaletteItem.i18nBundle.getText(COLORPALETTE_COLOR_LABEL);
 	}
 
 	get styles() {
