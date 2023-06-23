@@ -13,6 +13,14 @@
 	border-radius: var(--_ui5_segmented_btn_outer_border_radius);
 }
 
+:host([orientation="Vertical"]) {
+	vertical-align: top;
+}
+
+.ui5-segmented-button-root[vertical] {
+	flex-direction: column;
+}
+
 ::slotted([ui5-segmented-button-item]) {
 	border-radius: var(--_ui5_segmented_btn_inner_border_radius);
 	height: var(--_ui5_button_base_height);
@@ -39,7 +47,7 @@
 	background-color: var(--sapButton_Selected_Hover_Background);
 	color: var(--sapButton_Selected_TextColor);
 }
-
+/*
 ::slotted([ui5-segmented-button-item]:nth-child(odd)) {
 	border-inline-end: var(--_ui5_segmented_btn_inner_border_odd_child);
 	border-inline-start: var(--_ui5_segmented_btn_inner_border_odd_child);
@@ -72,7 +80,7 @@
 ::slotted([ui5-segmented-button-item][active]:first-child) {
 	border-inline-start: 0.0625rem solid var(--sapButton_Selected_BorderColor);
 }
-
+*/
 ::slotted([ui5-segmented-button-item][active]:not([active]):hover) {
 	border-color: var(--sapButton_BorderColor);
 }

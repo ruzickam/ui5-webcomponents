@@ -17,6 +17,7 @@ import {
 import { SEGMENTEDBUTTON_ARIA_DESCRIPTION, SEGMENTEDBUTTON_ARIA_DESCRIBEDBY } from "./generated/i18n/i18n-defaults.js";
 import SegmentedButtonItem from "./SegmentedButtonItem.js";
 import SegmentedButtonMode from "./types/SegmentedButtonMode.js";
+import SegmentedButtonOrientation from "./types/SegmentedButtonOrientation.js";
 
 // Template
 import SegmentedButtonTemplate from "./generated/templates/SegmentedButtonTemplate.lit.js";
@@ -109,6 +110,9 @@ class SegmentedButton extends UI5Element {
 	@property({ type: SegmentedButtonMode, defaultValue: SegmentedButtonMode.SingleSelect })
 	mode!: `${SegmentedButtonMode}`;
 
+	@property({ type: SegmentedButtonOrientation, defaultValue: SegmentedButtonOrientation.Horizontal })
+	orientation!: `${SegmentedButtonOrientation}`;
+
 	/**
 	 * Defines the items of <code>ui5-segmented-button</code>.
 	 * <br><br>
@@ -170,6 +174,9 @@ class SegmentedButton extends UI5Element {
 		items.forEach((item, index, arr) => {
 			item.posInSet = index + 1;
 			item.sizeOfSet = arr.length;
+			// set iconOnly property of the item if the layout is vertical
+			// in order to prevent displaying of the text
+			item.iconOnly = this.isVertical;
 		});
 
 		this.normalizeSelection();
@@ -296,26 +303,35 @@ class SegmentedButton extends UI5Element {
 	}
 
 	async _doLayout(): Promise<void> {
-		const itemsHaveWidth = this.widths && this.widths.some(itemWidth => itemWidth > 2); // 2 pixels added for rounding
-		if (!itemsHaveWidth) {
-			await this.measureItemsWidth();
+		// adjust the width only in Horizontasl orientation as in vertical the width is fixed
+		if (this.orientation === SegmentedButtonOrientation.Horizontal) {
+			const itemsHaveWidth = this.widths && this.widths.some(itemWidth => itemWidth > 2); // 2 pixels added for rounding
+			if (!itemsHaveWidth) {
+				await this.measureItemsWidth();
+			}
+
+			const parentWidth = this.parentNode ? (this.parentNode as HTMLElement).offsetWidth : 0;
+
+			if (!this.style.width || this.percentageWidthSet) {
+				this.style.width = `${Math.max(...this.widths!) * this.items.length}px`;
+				this.absoluteWidthSet = true;
+			}
+
+			this.items.forEach(item => {
+				item.style.width = "100%";
+			});
+
+			if (parentWidth <= this.offsetWidth && this.absoluteWidthSet) {
+				this.style.width = "100%";
+				this.percentageWidthSet = true;
+			}
+		} else {
+			this.style.width = "";
 		}
+	}
 
-		const parentWidth = this.parentNode ? (this.parentNode as HTMLElement).offsetWidth : 0;
-
-		if (!this.style.width || this.percentageWidthSet) {
-			this.style.width = `${Math.max(...this.widths!) * this.items.length}px`;
-			this.absoluteWidthSet = true;
-		}
-
-		this.items.forEach(item => {
-			item.style.width = "100%";
-		});
-
-		if (parentWidth <= this.offsetWidth && this.absoluteWidthSet) {
-			this.style.width = "100%";
-			this.percentageWidthSet = true;
-		}
+	get isVertical() {
+		return this.orientation === SegmentedButtonOrientation.Vertical;
 	}
 
 	/**

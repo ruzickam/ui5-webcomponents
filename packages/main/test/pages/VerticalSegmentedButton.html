@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+
+	<title>ui5-segmented-button</title>
+
+
+	<script src="../../bundle.esm.js" type="module"></script>
+
+
+	<script>// delete Document.prototype.adoptedStyleSheets;</script>
+
+<link rel="stylesheet" type="text/css" href="./styles/SegmentedButton.css">
+</head>
+
+<body>
+	<header class="header">
+		<h1 class="header-title">Vertical ui5-segmented-button</h1>
+	</header>
+
+	<section class="main">
+		<div class="samples">
+			<h2>SegmentedButton orientation change</h2>
+			<div class="sample" id="main-sample">
+				<section style="margin-bottom: 20px;">
+					<ui5-button id="orient1" icon="rotate">Change Orientation</ui5-button>
+				</section>
+				<section>
+					<ui5-segmented-button id="segButton1">
+						<ui5-segmented-button-item tooltip="Employee" icon="employee" pressed>Employee</ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="menu">Menu</ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="factory">Factory</ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="accept">Accept</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+			</div>
+
+			<h2>SegmentedButton with missing icons</h2>
+			<div class="sample" id="main-sample">
+				<section style="margin-bottom: 20px;">
+					<ui5-button id="orient2" icon="rotate">Change Orientation</ui5-button>
+				</section>
+				<section>
+					<ui5-segmented-button id="segButton2">
+						<ui5-segmented-button-item icon="employee" pressed>Employee</ui5-segmented-button-item>
+						<ui5-segmented-button-item>Menu</ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="factory">Factory</ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="accept">Accept</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+			</div>
+
+			<h2>SegmentedButton in small container with overflow: hidden</h2>
+			<div class="sample" id="main-sample">
+				<section style="margin-bottom: 20px;">
+					<ui5-button id="orient3" icon="rotate">Change Orientation</ui5-button>
+				</section>
+				<section style="height: 100px; overflow: hidden; border: 1px solid #CCCCCC">
+					<ui5-segmented-button id="segButton3">
+						<ui5-segmented-button-item icon="employee" pressed>Employee</ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="menu">Menu</ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="factory">Factory</ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="accept">Accept</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+			</div>
+
+			<h2>SegmentedButton in small container with overflow: auto</h2>
+			<div class="sample" id="main-sample">
+				<section style="margin-bottom: 20px;">
+					<ui5-button id="orient4" icon="rotate">Change Orientation</ui5-button>
+				</section>
+				<section style="height: 100px; overflow: auto; border: 1px solid #CCCCCC">
+					<ui5-segmented-button id="segButton4">
+						<ui5-segmented-button-item icon="employee" pressed>Employee</ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="menu">Menu</ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="factory">Factory</ui5-segmented-button-item>
+						<ui5-segmented-button-item icon="accept">Accept</ui5-segmented-button-item>
+					</ui5-segmented-button>
+				</section>
+			</div>
+
+		</div>
+	</section>
+
+	<script>
+		orient1.addEventListener("click", function() {
+			segButton1.orientation = segButton1.orientation === "Horizontal" ? "Vertical" : "Horizontal";
+		});
+
+		orient2.addEventListener("click", function() {
+			segButton2.orientation = segButton2.orientation === "Horizontal" ? "Vertical" : "Horizontal";
+		});
+
+		orient3.addEventListener("click", function() {
+			segButton3.orientation = segButton3.orientation === "Horizontal" ? "Vertical" : "Horizontal";
+		});
+
+		orient4.addEventListener("click", function() {
+			segButton4.orientation = segButton4.orientation === "Horizontal" ? "Vertical" : "Horizontal";
+		});
+	</script>
+
+</body>
+</html>

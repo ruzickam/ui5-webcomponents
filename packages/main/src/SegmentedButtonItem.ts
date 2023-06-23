@@ -97,6 +97,10 @@ class SegmentedButtonItem extends ToggleButton {
 	get ariaDescription() {
 		return SegmentedButtonItem.i18nBundle.getText(SEGMENTEDBUTTONITEM_ARIA_DESCRIPTION);
 	}
+
+	get isIconOnly() {
+		return this.iconOnly;
+	}
 }
 
 SegmentedButtonItem.define();
