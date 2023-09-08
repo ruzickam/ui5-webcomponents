@@ -35,7 +35,7 @@ import buttonCss from "./generated/themes/Button.css.js";
 import type FormSupport from "./features/InputElementsFormSupport.js";
 
 let isGlobalHandlerAttached = false;
-let activeButton: Button | null = null;
+let activeButton: Button | null = null; // TEST
 
 /**
  * @class
