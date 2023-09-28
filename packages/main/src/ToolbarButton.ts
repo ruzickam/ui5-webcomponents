@@ -199,6 +199,14 @@ class ToolbarButton extends ToolbarItem {
 	@property({ validator: CSSSize })
 	width?: string;
 
+	// _onTBToggleButtonClick = function () {
+	// 	console.error("ToolbarButton: this is ", this);
+	// }.bind(this);
+
+	_onTBToggleButtonClick() {
+		// console.error("ToolbarButton: this is ", this);
+	}
+
 	static get staticAreaStyles() {
 		return ToolbarButtonPopoverCss;
 	}
