@@ -30,17 +30,8 @@ Basic.args = {
 };
 export const WithIcons = Template.bind({});
 WithIcons.args = {
-    default: `<ui5-segmented-button-item icon="employee" pressed=""></ui5-segmented-button-item>
-<ui5-segmented-button-item icon="menu"></ui5-segmented-button-item>
-<ui5-segmented-button-item icon="factory"></ui5-segmented-button-item>`,
-};
-export const WithMoreItems = Template.bind({});
-WithMoreItems.storyName = "More Segmented Button Items";
-WithMoreItems.args = {
-    default: `<ui5-segmented-button-item>Item</ui5-segmented-button-item>
-<ui5-segmented-button-item pressed="">Pressed SegmentedButtonItem With Bigger Text</ui5-segmented-button-item>
-<ui5-segmented-button-item>Item</ui5-segmented-button-item>
-<ui5-segmented-button-item>SegmentedButtonItem</ui5-segmented-button-item>
-<ui5-segmented-button-item>Press me</ui5-segmented-button-item>`,
+    default: `<ui5-segmented-button-item icon="bold-text" pressed=""></ui5-segmented-button-item>
+<ui5-segmented-button-item icon="underline-text"></ui5-segmented-button-item>
+<ui5-segmented-button-item icon="italic-text"></ui5-segmented-button-item>`,
 };
 //# sourceMappingURL=SegmentedButton.stories.js.map

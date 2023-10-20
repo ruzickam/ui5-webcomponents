@@ -1,8 +1,8 @@
-commit 46e89e757a4a01875d3cd020eb6491f9677b9b77
-Author: Plamen Ivanov <plamen.ivanov01@sap.com>
-Date:   Fri Oct 20 15:22:30 2023 +0300
+commit f433b4653c2fb43f07d10d12656d46cf88dc542f
+Author: Boyan Rakilovski <boyan.rakilovski@sap.com>
+Date:   Fri Oct 20 18:12:36 2023 +0300
 
-    fix(ui5-tree-item-custom): text wrapper allows proper alignment of flex content (#7733)
+    docs: enhance storybook samples (#7664)
     
-    fix(ui5-tree-item-custom): text wrapper allows proper alignment of flex content
-    Fixes: #7483
+    The Button, SegmentedButton and ToggleButton samples
+    are updated according to the design colleagues recommendations.

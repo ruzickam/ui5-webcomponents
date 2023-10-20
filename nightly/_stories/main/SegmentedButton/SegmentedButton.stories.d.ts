@@ -6,4 +6,3 @@ declare const _default: Meta<SegmentedButton>;
 export default _default;
 export declare const Basic: UI5StoryArgs<SegmentedButton, StoryArgsSlots>;
 export declare const WithIcons: UI5StoryArgs<SegmentedButton, StoryArgsSlots>;
-export declare const WithMoreItems: UI5StoryArgs<SegmentedButton, StoryArgsSlots>;
