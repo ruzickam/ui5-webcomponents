@@ -1,0 +1,14 @@
+import type { Meta } from "@storybook/web-components";
+import type { StoryArgsSlots } from "./argTypes.js";
+import type { UI5StoryArgs } from "../../../types.js";
+import MediaGallery from "@ui5/webcomponents-fiori/dist/MediaGallery.js";
+declare const _default: Meta<MediaGallery>;
+export default _default;
+export declare const Basic: UI5StoryArgs<MediaGallery, StoryArgsSlots>;
+export declare const VerticalLayout: UI5StoryArgs<MediaGallery, StoryArgsSlots>;
+export declare const ThumbnailsOnTheRight: UI5StoryArgs<MediaGallery, StoryArgsSlots>;
+export declare const SeparateImageThumbnail: UI5StoryArgs<MediaGallery, StoryArgsSlots>;
+export declare const VideoContent: UI5StoryArgs<MediaGallery, StoryArgsSlots>;
+export declare const DisabledContent: UI5StoryArgs<MediaGallery, StoryArgsSlots>;
+export declare const InitiallySelected: UI5StoryArgs<MediaGallery, StoryArgsSlots>;
+export declare const ThumbnailOverflow: UI5StoryArgs<MediaGallery, StoryArgsSlots>;
