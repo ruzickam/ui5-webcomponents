@@ -1,7 +1,7 @@
-commit 4e9527225be27c957ea71f17a4cacb3bc065d6b7
-Author: Tsanislav Gatev <tsanislav.gatev@sap.com>
-Date:   Fri Oct 20 10:43:28 2023 +0300
+commit 45b11f9e47be92d71058960bf7c0c5254cf8ca6a
+Author: Boyan Rakilovski <boyan.rakilovski@sap.com>
+Date:   Fri Oct 20 13:25:09 2023 +0300
 
-    fix(ui5-color-picker): fix hsl to rgb color conversion (#7723)
+    fix(ui5-calendar): adjust selected border color (#7730)
     
-    Fixes: #7660
+    The border color of the day grid cell is now correct.
