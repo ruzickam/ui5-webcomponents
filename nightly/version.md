@@ -1,7 +1,8 @@
-commit efb9a94040759836a2f57093e29a047bbcd19c29
-Author: Petar Dimov <32839090+dimovpetar@users.noreply.github.com>
-Date:   Fri Oct 20 13:50:31 2023 +0300
+commit 46e89e757a4a01875d3cd020eb6491f9677b9b77
+Author: Plamen Ivanov <plamen.ivanov01@sap.com>
+Date:   Fri Oct 20 15:22:30 2023 +0300
 
-    refactor(ui5-tabcontainer): apply responsive paddings using container queries (#7717)
+    fix(ui5-tree-item-custom): text wrapper allows proper alignment of flex content (#7733)
     
-    Part of https://github.com/SAP/ui5-webcomponents/issues/7666
+    fix(ui5-tree-item-custom): text wrapper allows proper alignment of flex content
+    Fixes: #7483
