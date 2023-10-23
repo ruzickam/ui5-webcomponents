@@ -1,8 +1,7 @@
-commit f433b4653c2fb43f07d10d12656d46cf88dc542f
-Author: Boyan Rakilovski <boyan.rakilovski@sap.com>
-Date:   Fri Oct 20 18:12:36 2023 +0300
+commit f6e9ac4d832f66aa3fca697a1b16200cf971b3d1
+Author: Petar Dimov <32839090+dimovpetar@users.noreply.github.com>
+Date:   Mon Oct 23 08:58:59 2023 +0300
 
-    docs: enhance storybook samples (#7664)
+    fix(ui5-popup): apply responsive paddings as early as possible (#7710)
     
-    The Button, SegmentedButton and ToggleButton samples
-    are updated according to the design colleagues recommendations.
+    Fixes: #7644
