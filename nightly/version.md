@@ -1,9 +1,9 @@
-commit 6bcb97039d6975f8e61f404dc8f6d2c72a249e6d
+commit 40ffa2073410f655e4931bfbe7df0c1977f821fa
 Author: niyap <38278268+niyap@users.noreply.github.com>
-Date:   Wed Oct 25 10:02:03 2023 +0300
+Date:   Wed Oct 25 10:01:36 2023 +0300
 
-    fix(ui5-input): add additional text to the item's announcement (#7715)
+    fix(ui5-combobox): exclude group from suggestions count (#7713)
     
-    * fix(ui5-input): add additional text to the item's announcement
+    * fix(ui5-combobox): exclude group from suggestions count
     
-    * fix(ui5-input): adjust test
+    * fix(ui5-combobox): adjust test description
