@@ -1,9 +1,9 @@
-commit d0a624bfc53819afc5daf3925e666f2f5d3debf2
-Author: SAP LX Lab Service Account <tmsatsls+github.com_service-tip-git@sap.com>
-Date:   Mon Oct 23 01:46:01 2023 -0700
+commit 6bcb97039d6975f8e61f404dc8f6d2c72a249e6d
+Author: niyap <38278268+niyap@users.noreply.github.com>
+Date:   Wed Oct 25 10:02:03 2023 +0300
 
-    Translation Delivery (#7720)
+    fix(ui5-input): add additional text to the item's announcement (#7715)
     
-    [INTERNAL] Translation delivery: commit by LX Lab
+    * fix(ui5-input): add additional text to the item's announcement
     
-    Change-Id: I264202944a9d3e145dbaf69c07b54872d3c7ac5f
+    * fix(ui5-input): adjust test
