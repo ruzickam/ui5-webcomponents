@@ -1,7 +1,7 @@
-commit 612f50351afcf407a8f86457532f7da0e856d4b5
+commit ec80faee410d07fa53756a8972fed29bc969c40f
 Author: Georgieva <lidiya.georgieva@sap.com>
-Date:   Thu Oct 26 13:19:06 2023 +0300
+Date:   Thu Oct 26 14:48:24 2023 +0300
 
-    fix(ui5-tabcontainer): add margins for the Overflow buttons (start and end) (#7745)
+    fix(ui5-popup): add check for initial focused element id (#7746)
     
-    fixes: #7291
+    Fixes: #7711
