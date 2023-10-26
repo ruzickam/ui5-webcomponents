@@ -1,5 +1,7 @@
-commit 5da1fbee98e7571056c52299324f185a51699f0e
-Author: Elena Stoyanova <elena.stoyanova@sap.com>
-Date:   Thu Oct 26 09:28:43 2023 +0300
+commit 612f50351afcf407a8f86457532f7da0e856d4b5
+Author: Georgieva <lidiya.georgieva@sap.com>
+Date:   Thu Oct 26 13:19:06 2023 +0300
 
-    fix(ui5-input): update clear icon accessible name (#7744)
+    fix(ui5-tabcontainer): add margins for the Overflow buttons (start and end) (#7745)
+    
+    fixes: #7291
