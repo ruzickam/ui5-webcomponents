@@ -1,9 +1,5 @@
-commit 40ffa2073410f655e4931bfbe7df0c1977f821fa
-Author: niyap <38278268+niyap@users.noreply.github.com>
-Date:   Wed Oct 25 10:01:36 2023 +0300
+commit 5da1fbee98e7571056c52299324f185a51699f0e
+Author: Elena Stoyanova <elena.stoyanova@sap.com>
+Date:   Thu Oct 26 09:28:43 2023 +0300
 
-    fix(ui5-combobox): exclude group from suggestions count (#7713)
-    
-    * fix(ui5-combobox): exclude group from suggestions count
-    
-    * fix(ui5-combobox): adjust test description
+    fix(ui5-input): update clear icon accessible name (#7744)
