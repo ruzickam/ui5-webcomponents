@@ -1,7 +1,7 @@
-commit ec80faee410d07fa53756a8972fed29bc969c40f
-Author: Georgieva <lidiya.georgieva@sap.com>
-Date:   Thu Oct 26 14:48:24 2023 +0300
+commit 7c6e48a14fe7de73a4b1f012d235d5b801b4e90f
+Author: Hristo Petrov <h.petrov@sap.com>
+Date:   Fri Oct 27 09:48:00 2023 +0300
 
-    fix(ui5-popup): add check for initial focused element id (#7746)
+    docs(ui5-rating-indicator): change default value (#7756)
     
-    Fixes: #7711
+    Updating the value as per UX recomendation.
