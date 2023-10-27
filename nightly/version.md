@@ -1,7 +1,7 @@
-commit 7c6e48a14fe7de73a4b1f012d235d5b801b4e90f
-Author: Hristo Petrov <h.petrov@sap.com>
-Date:   Fri Oct 27 09:48:00 2023 +0300
+commit 288f6d4d6cee9dccf1c64fa12b3ead2920c6c08a
+Author: Nayden Naydenov <31909318+nnaydenow@users.noreply.github.com>
+Date:   Fri Oct 27 10:35:24 2023 +0300
 
-    docs(ui5-rating-indicator): change default value (#7756)
+    fix(framework): use correct customElements registry (#7760)
     
-    Updating the value as per UX recomendation.
+    Co-authored-by: Nayden Naydenov <nnaydenow.work@sap.com>
