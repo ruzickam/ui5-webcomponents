@@ -1,8 +1,7 @@
-commit 10dadd79e3a93daf29baaed3a5bcebd8c66a0940
+commit afd3f191bcad2bd122d22e95d942aabe2affea94
 Author: ilhan orhan <ilhan.orhan007@gmail.com>
-Date:   Fri Oct 27 11:08:48 2023 +0300
+Date:   Fri Oct 27 11:54:43 2023 +0300
 
-    feat(framework): switch default theme from Quartz Light to Morning Ho… (#7749)
+    docs: update TypeScript Support statement (#7747)
     
-    Until now, Quartz Light ("sap_fiori_3") used to be the default theme for our framework.
-    However, as Morning Horizon has been around for almost two years and the majority of our consumers migrated to Horizon, we now switch our default theme from Quartz Light to Morning Horizon ("sap_horizon").
+    We now remove the "experimental" notion for our TypeScript support from the documentation.
