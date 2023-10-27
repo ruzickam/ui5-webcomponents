@@ -1,7 +1,7 @@
-commit 288f6d4d6cee9dccf1c64fa12b3ead2920c6c08a
-Author: Nayden Naydenov <31909318+nnaydenow@users.noreply.github.com>
-Date:   Fri Oct 27 10:35:24 2023 +0300
+commit 2f6780f45ee2b6c60ead36c54ae634276d959b2e
+Author: Plamen Ivanov <plamen.ivanov01@sap.com>
+Date:   Fri Oct 27 10:37:24 2023 +0300
 
-    fix(framework): use correct customElements registry (#7760)
+    fix(ui5-list): removed unnecessary accessibility reading (#7758)
     
-    Co-authored-by: Nayden Naydenov <nnaydenow.work@sap.com>
+    Fixes: #7601
