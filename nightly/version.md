@@ -1,7 +1,13 @@
-commit afd3f191bcad2bd122d22e95d942aabe2affea94
-Author: ilhan orhan <ilhan.orhan007@gmail.com>
-Date:   Fri Oct 27 11:54:43 2023 +0300
+commit 14fd6423ce0ecd6d34074e81c53ff5e6bdfdf7c8
+Author: Elena Stoyanova <elena.stoyanova@sap.com>
+Date:   Mon Oct 30 08:30:08 2023 +0200
 
-    docs: update TypeScript Support statement (#7747)
+    fix(ui5-slider): update labels on min and max change (#7764)
     
-    We now remove the "experimental" notion for our TypeScript support from the documentation.
+    * fix(ui5-slider): update labels on min and max change
+    
+    * fix(ui5-slider): fix test
+    
+    ---------
+    
+    Co-authored-by: Elena Stoyanova <e.nikolova@sap.com>
