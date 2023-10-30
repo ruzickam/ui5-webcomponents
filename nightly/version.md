@@ -1,11 +1,9 @@
-commit 194185400bb70a778359a721928ad3a99bd5f3a6
-Author: niyap <38278268+niyap@users.noreply.github.com>
-Date:   Mon Oct 30 11:26:18 2023 +0200
+commit 54a411d17ce72b1ded406b9eed7fb1a35eb0fa96
+Author: PetyaMarkovaBogdanova <petya.markova-bogdanova@sap.com>
+Date:   Mon Oct 30 12:33:57 2023 +0200
 
-    fix(ui5-combobox): announce value state header on focus (#7751)
+    docs(ui5-toolbar): fix documentation (#7667)
     
-    * fix(ui5-combobox): announce value state header on focus
+    fix(ui5-toolbar): documentation
     
-    * fix(ui5-combobox): announce default value state text
-    
-    * fix(ui5-combobox): adjust condition
+    Co-authored-by: PetyaMarkovaBogdanova <petya.markova@sap.com>

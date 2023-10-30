@@ -6,3 +6,4 @@ declare const _default: Meta<Toolbar>;
 export default _default;
 export declare const Basic: UI5StoryArgs<Toolbar, StoryArgsSlots>;
 export declare const Types: StoryFn;
+export declare const MultipleUI5SelectComponents: UI5StoryArgs<Toolbar, StoryArgsSlots>;
