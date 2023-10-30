@@ -1,11 +1,11 @@
-commit 5a510cff52a1e8d19f38f33b4582f9555aa28527
+commit 194185400bb70a778359a721928ad3a99bd5f3a6
 Author: niyap <38278268+niyap@users.noreply.github.com>
-Date:   Mon Oct 30 11:23:31 2023 +0200
+Date:   Mon Oct 30 11:26:18 2023 +0200
 
-    fix(ui5-textarea): select exceeded text (#7741)
+    fix(ui5-combobox): announce value state header on focus (#7751)
     
-    * fix(ui5-textarea): select exceeded text
+    * fix(ui5-combobox): announce value state header on focus
     
-    * fix(ui5-textarea): adjust test
+    * fix(ui5-combobox): announce default value state text
     
-    * fix(ui5-textarea): adjust text description
+    * fix(ui5-combobox): adjust condition
