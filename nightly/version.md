@@ -1,5 +1,7 @@
-commit 629e4e61c4c10ac4cb4fd273570c261305e7fb43
-Author: ilhan orhan <ilhan.orhan007@gmail.com>
-Date:   Tue Oct 31 12:54:58 2023 +0200
+commit 33cdb86b34a3cb6e1b849a186a8c8c1652eb5bca
+Author: Tsanislav Gatev <tsanislav.gatev@sap.com>
+Date:   Tue Oct 31 18:08:12 2023 +0200
 
-    Update README.md
+    fix(ui5-view-settings-dialog): improve settings management (#7769)
+    
+    fixes: #7752
