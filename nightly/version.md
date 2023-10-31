@@ -1,9 +1,9 @@
-commit 54a411d17ce72b1ded406b9eed7fb1a35eb0fa96
-Author: PetyaMarkovaBogdanova <petya.markova-bogdanova@sap.com>
-Date:   Mon Oct 30 12:33:57 2023 +0200
+commit 842f047844ac7f06716813c2fa0ebcb3ae64c9a7
+Author: Tsanislav Gatev <tsanislav.gatev@sap.com>
+Date:   Tue Oct 31 08:57:55 2023 +0200
 
-    docs(ui5-toolbar): fix documentation (#7667)
+    fix(ui5-calendar): focus date set in slot (#7735)
     
-    fix(ui5-toolbar): documentation
+    fixes: #7693
     
-    Co-authored-by: PetyaMarkovaBogdanova <petya.markova@sap.com>
+    We are now considering the ui5-date, set trough nested element, for the focus. Previously we only focused the date passes as timestamp, and that timestamp changed based on current day, navigation and etc. We now check if we have a value set to the control and our initial focus goes to it, if the value is set after init state, we set the focus to the newly set date.
