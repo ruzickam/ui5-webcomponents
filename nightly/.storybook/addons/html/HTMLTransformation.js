@@ -1,21 +1,30 @@
-import { AttributeProcessor } from "./processors";
+import { AttributeProcessor, StylesProcessor } from "./processors";
 /**
  * This class is responsible for transforming the HTML code of the story.
  * Used by the HTML addon.
  */
 export class HTMLTransformation {
-    constructor(processors) {
-        this.processors = processors;
-        this.processors = processors;
+    constructor(headProcessors, bodyProcessors) {
+        this.headProcessors = headProcessors;
+        this.bodyProcessors = bodyProcessors;
+        this.headProcessors = headProcessors;
+        this.bodyProcessors = bodyProcessors;
     }
     transform(html) {
-        const dom = this.convertToDOM(html);
-        this.walk(dom, (node) => {
-            this.processors.forEach((processor) => {
+        let transformed = "";
+        const dom = this.convertToDOM(html), head = dom.head, body = dom.body;
+        this.headProcessors.forEach((processor) => {
+            processor.process(head);
+        });
+        this.walk(body, (node) => {
+            this.bodyProcessors.forEach((processor) => {
                 processor.process(node);
             });
         });
-        const transformed = this.convertToString(dom);
+        if (head.innerHTML) {
+            transformed += this.convertToString(head);
+        }
+        transformed += this.convertToString(body);
         return transformed;
     }
     walk(node, callback) {
@@ -33,9 +42,10 @@ export class HTMLTransformation {
     convertToDOM(html) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
-        return doc.body;
+        return doc;
     }
 }
-const processors = [new AttributeProcessor()];
-export const htmlTransformation = new HTMLTransformation(processors);
+const headProcessors = [new StylesProcessor()];
+const bodyProcessors = [new AttributeProcessor()];
+export const htmlTransformation = new HTMLTransformation(headProcessors, bodyProcessors);
 //# sourceMappingURL=HTMLTransformation.js.map

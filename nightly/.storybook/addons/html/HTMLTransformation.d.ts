@@ -7,8 +7,9 @@ export interface IHTMLTransformation {
  * Used by the HTML addon.
  */
 export declare class HTMLTransformation implements IHTMLTransformation {
-    private processors;
-    constructor(processors: IProcessor[]);
+    private headProcessors;
+    private bodyProcessors;
+    constructor(headProcessors: IProcessor[], bodyProcessors: IProcessor[]);
     transform(html: string): string;
     private walk;
     private convertToString;

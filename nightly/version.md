@@ -1,9 +1,9 @@
-commit 425e97bd5fa030155502f3b9c7022e0e1a3d3202
-Author: ilhan orhan <ilhan.orhan007@gmail.com>
-Date:   Tue Oct 31 09:59:52 2023 +0200
+commit 50d246c5a868ba3e9a12c4b7ea910e5ba40e2dbb
+Author: Diana Pazheva <diana.pazheva@sap.com>
+Date:   Tue Oct 31 11:09:03 2023 +0200
 
-    fix(FormSupport): submit linebreaks in ui5-textarea (#7757)
+    docs(playground): html addon now shows decorated styles (#7714)
     
-    Previously we used to always render an input native element in the light DOM of our input-type web components for the purposes of the FormSupport. This includes the TextArea web component. However, when linebreaks are used in the TextArea web components, they got lost (native input supports one-line text) and eventually not part of the form submission. Now we use native textarea element and the line breaks are properly submitted.
+    * docs(playground): html addon now shows decorated styles
     
-    Fixes: #7467
+    * docs(playground): address code review feedback
