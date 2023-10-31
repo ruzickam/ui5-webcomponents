@@ -1,9 +1,9 @@
-commit 842f047844ac7f06716813c2fa0ebcb3ae64c9a7
-Author: Tsanislav Gatev <tsanislav.gatev@sap.com>
-Date:   Tue Oct 31 08:57:55 2023 +0200
+commit 425e97bd5fa030155502f3b9c7022e0e1a3d3202
+Author: ilhan orhan <ilhan.orhan007@gmail.com>
+Date:   Tue Oct 31 09:59:52 2023 +0200
 
-    fix(ui5-calendar): focus date set in slot (#7735)
+    fix(FormSupport): submit linebreaks in ui5-textarea (#7757)
     
-    fixes: #7693
+    Previously we used to always render an input native element in the light DOM of our input-type web components for the purposes of the FormSupport. This includes the TextArea web component. However, when linebreaks are used in the TextArea web components, they got lost (native input supports one-line text) and eventually not part of the form submission. Now we use native textarea element and the line breaks are properly submitted.
     
-    We are now considering the ui5-date, set trough nested element, for the focus. Previously we only focused the date passes as timestamp, and that timestamp changed based on current day, navigation and etc. We now check if we have a value set to the control and our initial focus goes to it, if the value is set after init state, we set the focus to the newly set date.
+    Fixes: #7467
