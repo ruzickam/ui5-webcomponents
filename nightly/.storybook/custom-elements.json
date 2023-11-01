@@ -1712,18 +1712,6 @@
                         {
                             "deprecated": false,
                             "kind": "field",
-                            "name": "selected",
-                            "privacy": "public",
-                            "static": false,
-                            "type": {
-                                "text": "boolean"
-                            },
-                            "default": "false",
-                            "description": "Defines if the component is selected. <br><br> <b>Note:</b> Only one item must be selected per <code>ui5-color-palette</code>. If more than one item is defined as selected, the last one would be considered as the selected one."
-                        },
-                        {
-                            "deprecated": false,
-                            "kind": "field",
                             "name": "value",
                             "privacy": "public",
                             "static": false,

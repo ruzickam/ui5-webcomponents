@@ -1,7 +1,7 @@
-commit 33cdb86b34a3cb6e1b849a186a8c8c1652eb5bca
-Author: Tsanislav Gatev <tsanislav.gatev@sap.com>
-Date:   Tue Oct 31 18:08:12 2023 +0200
+commit f24ff9019287f1b0a83d543b6486e5eb4d34ed35
+Author: Stoyan <88034608+hinzzx@users.noreply.github.com>
+Date:   Wed Nov 1 17:06:22 2023 +0200
 
-    fix(ui5-view-settings-dialog): improve settings management (#7769)
+    revert(ui5-color-palette-item): revert selected state feature (#7782)
     
-    fixes: #7752
+    Due to lack of clear guidelines around the interaction, we currently decided to not move forward with the selected state feature in our ColorPalette's components, and revert the current implementation, until a finalized guidelines are provided in order avoid unwanted and inconsistent interaction behaviour.
