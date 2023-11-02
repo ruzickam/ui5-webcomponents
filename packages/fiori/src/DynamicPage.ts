@@ -63,6 +63,13 @@ class DynamicPage extends UI5Element {
 	@slot({ type: HTMLElement })
 	footer!: HTMLElement[];
 
+	isExpanding = false;
+	iPreviousScrollAmount = 0;
+
+	onAfterRendering() {
+		document.addEventListener("scroll", this.snapOnScroll.bind(this));
+	}
+
 	get classes() {
 		return {
 			root: {
@@ -84,11 +91,40 @@ class DynamicPage extends UI5Element {
 		return this.querySelector<DynamicPageTitle>("[ui5-dynamic-page-title]");
 	}
 
+	get dynamicPageHeader() {
+		return this.querySelector<DynamicPageHeader>("[ui5-dynamic-page-header]");
+	}
+
+	snapOnScroll() {
+		if (!this.dynamicPageTitle) {
+			return;
+		}
+
+		if (this.iPreviousScrollAmount === document.documentElement.scrollTop || this.headerPinned) {
+			return;
+		}
+
+		this.iPreviousScrollAmount = document.documentElement.scrollTop;
+
+		if (this.isExpanding) {
+			this.isExpanding = false;
+			return;
+		}
+
+		if (document.documentElement.scrollTop > this.dynamicPageHeader?.getBoundingClientRect().height) {
+			this.headerSnapped = true;
+		} else {
+			this.headerSnapped = false;
+		}
+		this.dynamicPageTitle.snapped = this.headerSnapped;
+	}
+
 	onExpandClick() {
 		this.headerSnapped = !this.headerSnapped;
 		if (this.dynamicPageTitle) {
 			this.dynamicPageTitle.snapped = this.headerSnapped;
 		}
+		this.isExpanding = true;
 	}
 
 	onPinClick() {
